@@ -1,7 +1,7 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { usePathname } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import {
   Collapsible,
   CollapsibleContent,
@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { type NavEntry, isNavGroup } from "@/lib/navigation-types";
 
 export function SidebarNavItem({ entry }: { entry: NavEntry }) {
+  // usePathname from i18n/navigation returns path WITHOUT locale prefix
   const pathname = usePathname();
 
   if (isNavGroup(entry)) {
@@ -32,6 +33,7 @@ export function SidebarNavItem({ entry }: { entry: NavEntry }) {
     );
   }
 
+  // Both pathname and entry.href are WITHOUT locale prefix, so comparison works
   const isActive = pathname === entry.href;
 
   return (

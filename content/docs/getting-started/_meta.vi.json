@@ -1,0 +1,6 @@
+{
+  "installation": { "title": "Cài đặt", "order": 1 },
+  "project-structure": { "title": "Cấu trúc dự án", "order": 2 },
+  "configuration": { "title": "Cấu hình", "order": 3 },
+  "internationalization": { "title": "Đa ngôn ngữ (i18n)", "order": 4 }
+}

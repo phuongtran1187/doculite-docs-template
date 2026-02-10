@@ -35,6 +35,12 @@ const docs = defineCollection({
         }
       }
 
+      // Normalize: Velite strips "index" for default files (docs/index → ""),
+      // but locale variants keep it (docs/index.vi → "index"). Align them.
+      if (cleanSlug === "index" || cleanSlug.endsWith("/index")) {
+        cleanSlug = cleanSlug.replace(/\/?index$/, "");
+      }
+
       return { ...data, locale, slugAsParams: cleanSlug };
     }),
 });

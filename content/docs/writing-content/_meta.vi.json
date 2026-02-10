@@ -1,0 +1,5 @@
+{
+  "mdx-basics": { "title": "MDX cơ bản", "order": 1 },
+  "frontmatter": { "title": "Frontmatter", "order": 2 },
+  "organizing-pages": { "title": "Tổ chức trang", "order": 3 }
+}

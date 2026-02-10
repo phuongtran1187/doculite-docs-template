@@ -1,0 +1,5 @@
+{
+  "getting-started": { "title": "Bắt đầu", "order": 1 },
+  "writing-content": { "title": "Viết nội dung", "order": 2 },
+  "components": { "title": "Components", "order": 3 }
+}

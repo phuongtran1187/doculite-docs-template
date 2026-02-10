@@ -1,0 +1,74 @@
+---
+title: Tabs
+description: Tổ chức nội dung thành các panel tab chuyển đổi được.
+order: 2
+---
+
+Tabs cho phép bạn trình bày nhiều phiên bản nội dung trong bố cục gọn gàng. Hữu ích cho code ở nhiều ngôn ngữ hoặc package manager khác nhau.
+
+## Cách dùng cơ bản
+
+<Tabs items={["React", "Vue", "Svelte"]}>
+  <Tab value="React">
+    ```tsx
+    function App() {
+      return <h1>Hello React</h1>;
+    }
+    ```
+  </Tab>
+  <Tab value="Vue">
+    ```vue
+    <template>
+      <h1>Hello Vue</h1>
+    </template>
+    ```
+  </Tab>
+  <Tab value="Svelte">
+    ```svelte
+    <h1>Hello Svelte</h1>
+    ```
+  </Tab>
+</Tabs>
+
+```mdx
+<Tabs items={["React", "Vue", "Svelte"]}>
+  <Tab value="React">Nội dung React ở đây</Tab>
+  <Tab value="Vue">Nội dung Vue ở đây</Tab>
+  <Tab value="Svelte">Nội dung Svelte ở đây</Tab>
+</Tabs>
+```
+
+## Tab Package Manager
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">
+    ```bash
+    pnpm add next react react-dom
+    ```
+  </Tab>
+  <Tab value="npm">
+    ```bash
+    npm install next react react-dom
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    yarn add next react react-dom
+    ```
+  </Tab>
+</Tabs>
+
+## Props
+
+### Tabs
+
+| Prop | Kiểu | Mặc định | Mô tả |
+|------|------|----------|-------|
+| `items` | `string[]` | bắt buộc | Nhãn các tab |
+| `defaultValue` | `string` | Item đầu tiên | Tab active ban đầu |
+
+### Tab
+
+| Prop | Kiểu | Mô tả |
+|------|------|-------|
+| `value` | `string` | Phải khớp với một item trong `items` |

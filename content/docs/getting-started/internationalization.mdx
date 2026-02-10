@@ -1,0 +1,153 @@
+---
+title: Internationalization (i18n)
+description: How to add multi-language support to your documentation.
+order: 4
+---
+
+Doculite has built-in multi-language support powered by [next-intl](https://next-intl.dev). English is the default locale with no URL prefix. Other locales use a prefix like `/vi/docs/page`.
+
+## How It Works
+
+- Content translations use a **filename suffix** pattern: `page.vi.mdx` alongside `page.mdx`
+- Sidebar labels use `_meta.vi.json` alongside `_meta.json`
+- UI strings (search, banners) are translated via JSON message files
+- Untranslated pages automatically fall back to English with an info banner
+- Search results filter by the current locale
+
+## Adding a New Locale
+
+<Steps>
+
+### Register the locale
+
+Add your locale code to `SUPPORTED_LOCALES` in `lib/i18n-config.ts`:
+
+```ts
+export const SUPPORTED_LOCALES = ["en", "vi", "ja"] as const;
+
+export const LOCALE_LABELS: Record<Locale, string> = {
+  en: "English",
+  vi: "Tiếng Việt",
+  ja: "日本語",
+};
+```
+
+### Create UI string translations
+
+Copy `messages/en.json` to `messages/ja.json` and translate the values:
+
+```json
+{
+  "common": {
+    "search": "ドキュメントを検索...",
+    "searchShort": "検索...",
+    "noResults": "結果が見つかりません。"
+  },
+  "i18n": {
+    "switchLanguage": "言語",
+    "untranslatedBanner": "このページはまだ{language}では利用できません。英語版を表示しています。"
+  },
+  "footer": {
+    "builtWith": "Doculiteで構築。"
+  }
+}
+```
+
+### Add sidebar labels
+
+Create `_meta.ja.json` files in your content directories:
+
+```json
+{
+  "getting-started": { "title": "はじめに", "order": 1 },
+  "writing-content": { "title": "コンテンツ作成", "order": 2 },
+  "components": { "title": "コンポーネント", "order": 3 }
+}
+```
+
+<Callout type="info" title="Fallback">
+  If a `_meta.ja.json` file is missing, the default `_meta.json` is used instead.
+</Callout>
+
+### Create translated content
+
+Create `.ja.mdx` files alongside existing `.mdx` files:
+
+```
+content/docs/
+  index.mdx          # English (default)
+  index.ja.mdx       # Japanese translation
+  getting-started/
+    installation.mdx
+    installation.ja.mdx
+```
+
+</Steps>
+
+## Creating Translated Content
+
+Each translation is a separate MDX file with the locale suffix before `.mdx`:
+
+```
+page.mdx        → English (default)
+page.vi.mdx     → Vietnamese
+page.ja.mdx     → Japanese
+```
+
+The frontmatter structure is the same. Translate the `title` and `description`:
+
+```mdx
+---
+title: Cài đặt
+description: Hướng dẫn cài đặt và thiết lập Doculite.
+order: 1
+---
+
+Your translated content here...
+```
+
+<Callout type="tip" title="Partial Translation">
+  You don't need to translate every page. Untranslated pages show the English version with a banner indicating the page isn't available in the selected language.
+</Callout>
+
+## Sidebar Labels
+
+Each directory can have locale-specific sidebar labels via `_meta.{locale}.json`:
+
+| File | Purpose |
+|------|---------|
+| `_meta.json` | Default (English) sidebar titles and ordering |
+| `_meta.vi.json` | Vietnamese sidebar titles |
+| `_meta.ja.json` | Japanese sidebar titles |
+
+The sidebar always shows **all** pages, including untranslated ones. Untranslated pages link to the English fallback with a banner.
+
+## Language Switcher
+
+A globe icon in the header opens a dropdown to switch between available locales. The switcher preserves the current page path — navigating from `/docs/page` to `/vi/docs/page`.
+
+## Search
+
+The Cmd+K / Ctrl+K search only shows results for the **current locale**. If you're browsing Vietnamese docs, only Vietnamese-translated pages appear in search results.
+
+## SEO
+
+Doculite automatically adds `hreflang` meta tags to every doc page, telling search engines about available translations:
+
+```html
+<link rel="alternate" hreflang="en" href="https://example.com/docs/page" />
+<link rel="alternate" hreflang="vi" href="https://example.com/vi/docs/page" />
+<link rel="alternate" hreflang="x-default" href="https://example.com/docs/page" />
+```
+
+The `x-default` tag always points to the English version.
+
+## URL Structure
+
+| Locale | URL Pattern | Example |
+|--------|-------------|---------|
+| English (default) | `/docs/page` | `/docs/getting-started/installation` |
+| Vietnamese | `/vi/docs/page` | `/vi/docs/getting-started/installation` |
+| Japanese | `/ja/docs/page` | `/ja/docs/getting-started/installation` |
+
+English has no prefix. All other locales are prefixed with their locale code.

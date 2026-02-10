@@ -1,0 +1,153 @@
+---
+title: Đa ngôn ngữ (i18n)
+description: Cách thêm hỗ trợ đa ngôn ngữ cho tài liệu.
+order: 4
+---
+
+Doculite có sẵn hỗ trợ đa ngôn ngữ dựa trên [next-intl](https://next-intl.dev). English là locale mặc định, không có prefix URL. Các locale khác dùng prefix như `/vi/docs/page`.
+
+## Cách hoạt động
+
+- Bản dịch content dùng pattern **hậu tố tên file**: `page.vi.mdx` cạnh `page.mdx`
+- Nhãn sidebar dùng `_meta.vi.json` cạnh `_meta.json`
+- Chuỗi UI (search, banner) được dịch qua file JSON message
+- Trang chưa dịch tự động fallback về English với banner thông báo
+- Kết quả search lọc theo locale hiện tại
+
+## Thêm Locale mới
+
+<Steps>
+
+### Đăng ký locale
+
+Thêm mã locale vào `SUPPORTED_LOCALES` trong `lib/i18n-config.ts`:
+
+```ts
+export const SUPPORTED_LOCALES = ["en", "vi", "ja"] as const;
+
+export const LOCALE_LABELS: Record<Locale, string> = {
+  en: "English",
+  vi: "Tiếng Việt",
+  ja: "日本語",
+};
+```
+
+### Tạo file dịch chuỗi UI
+
+Copy `messages/en.json` thành `messages/ja.json` và dịch các giá trị:
+
+```json
+{
+  "common": {
+    "search": "ドキュメントを検索...",
+    "searchShort": "検索...",
+    "noResults": "結果が見つかりません。"
+  },
+  "i18n": {
+    "switchLanguage": "言語",
+    "untranslatedBanner": "このページはまだ{language}では利用できません。英語版を表示しています。"
+  },
+  "footer": {
+    "builtWith": "Doculiteで構築。"
+  }
+}
+```
+
+### Thêm nhãn sidebar
+
+Tạo file `_meta.ja.json` trong các thư mục content:
+
+```json
+{
+  "getting-started": { "title": "はじめに", "order": 1 },
+  "writing-content": { "title": "コンテンツ作成", "order": 2 },
+  "components": { "title": "コンポーネント", "order": 3 }
+}
+```
+
+<Callout type="info" title="Fallback">
+  Nếu thiếu file `_meta.ja.json`, file `_meta.json` mặc định sẽ được dùng thay thế.
+</Callout>
+
+### Tạo content đã dịch
+
+Tạo file `.ja.mdx` cạnh file `.mdx` hiện có:
+
+```
+content/docs/
+  index.mdx          # English (mặc định)
+  index.ja.mdx       # Bản dịch tiếng Nhật
+  getting-started/
+    installation.mdx
+    installation.ja.mdx
+```
+
+</Steps>
+
+## Tạo Content đã dịch
+
+Mỗi bản dịch là một file MDX riêng với hậu tố locale trước `.mdx`:
+
+```
+page.mdx        → English (mặc định)
+page.vi.mdx     → Tiếng Việt
+page.ja.mdx     → Tiếng Nhật
+```
+
+Cấu trúc frontmatter giống nhau. Dịch `title` và `description`:
+
+```mdx
+---
+title: Cài đặt
+description: Hướng dẫn cài đặt và thiết lập Doculite.
+order: 1
+---
+
+Nội dung đã dịch ở đây...
+```
+
+<Callout type="tip" title="Dịch một phần">
+  Bạn không cần dịch mọi trang. Trang chưa dịch sẽ hiển thị bản English với banner thông báo trang chưa có bản dịch cho ngôn ngữ đã chọn.
+</Callout>
+
+## Nhãn Sidebar
+
+Mỗi thư mục có thể có nhãn sidebar theo locale qua `_meta.{locale}.json`:
+
+| File | Mục đích |
+|------|----------|
+| `_meta.json` | Tiêu đề sidebar mặc định (English) và thứ tự |
+| `_meta.vi.json` | Tiêu đề sidebar tiếng Việt |
+| `_meta.ja.json` | Tiêu đề sidebar tiếng Nhật |
+
+Sidebar luôn hiển thị **tất cả** trang, bao gồm trang chưa dịch. Trang chưa dịch liên kết đến bản English fallback với banner.
+
+## Language Switcher
+
+Biểu tượng globe ở header mở dropdown để chuyển đổi giữa các locale. Switcher giữ nguyên đường dẫn trang hiện tại — chuyển từ `/docs/page` sang `/vi/docs/page`.
+
+## Search
+
+Search Cmd+K / Ctrl+K chỉ hiển thị kết quả cho **locale hiện tại**. Nếu bạn đang xem docs tiếng Việt, chỉ các trang đã dịch sang tiếng Việt xuất hiện trong kết quả.
+
+## SEO
+
+Doculite tự động thêm tag `hreflang` cho mọi trang doc, cho search engine biết về các bản dịch:
+
+```html
+<link rel="alternate" hreflang="en" href="https://example.com/docs/page" />
+<link rel="alternate" hreflang="vi" href="https://example.com/vi/docs/page" />
+<link rel="alternate" hreflang="x-default" href="https://example.com/docs/page" />
+```
+
+Tag `x-default` luôn trỏ đến bản English.
+
+## Cấu trúc URL
+
+| Locale | Pattern URL | Ví dụ |
+|--------|-------------|-------|
+| English (mặc định) | `/docs/page` | `/docs/getting-started/installation` |
+| Tiếng Việt | `/vi/docs/page` | `/vi/docs/getting-started/installation` |
+| Tiếng Nhật | `/ja/docs/page` | `/ja/docs/getting-started/installation` |
+
+English không có prefix. Các locale khác có prefix là mã locale.

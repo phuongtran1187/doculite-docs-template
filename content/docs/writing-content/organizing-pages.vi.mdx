@@ -1,0 +1,95 @@
+---
+title: Tổ chức trang
+description: Cách cấu trúc trang và điều khiển sidebar navigation.
+order: 3
+---
+
+## Cấu trúc thư mục
+
+Các trang tài liệu được tổ chức theo thư mục. Mỗi thư mục trở thành một nhóm trong sidebar navigation.
+
+```
+content/docs/
+├── index.mdx              → /docs
+├── _meta.json
+├── getting-started/
+│   ├── _meta.json
+│   ├── installation.mdx   → /docs/getting-started/installation
+│   └── configuration.mdx  → /docs/getting-started/configuration
+└── guides/
+    ├── _meta.json
+    └── deployment.mdx      → /docs/guides/deployment
+```
+
+## File _meta.json
+
+Mỗi thư mục dùng file `_meta.json` để điều khiển tiêu đề sidebar và thứ tự trang.
+
+### Root _meta.json
+
+Điều khiển thứ tự và tiêu đề của các nhóm thư mục:
+
+```json
+{
+  "getting-started": { "title": "Getting Started", "order": 1 },
+  "guides": { "title": "Guides", "order": 2 }
+}
+```
+
+### _meta.json trong thư mục
+
+Điều khiển thứ tự và tiêu đề các trang trong nhóm:
+
+```json
+{
+  "installation": { "title": "Installation", "order": 1 },
+  "configuration": { "title": "Configuration", "order": 2 }
+}
+```
+
+<Callout type="info">
+  Nếu không có `_meta.json`, trang được sắp xếp theo trường `order` trong frontmatter, và tên thư mục được chuyển từ kebab-case sang Title Case.
+</Callout>
+
+## Thêm Section mới
+
+<Steps>
+
+### Tạo thư mục
+
+Tạo thư mục mới trong `content/docs/`:
+
+```bash
+mkdir content/docs/guides
+```
+
+### Thêm _meta.json
+
+Tạo `content/docs/guides/_meta.json`:
+
+```json
+{
+  "deployment": { "title": "Deployment", "order": 1 }
+}
+```
+
+### Đăng ký trong root _meta.json
+
+Thêm thư mục vào `content/docs/_meta.json`:
+
+```json
+{
+  "getting-started": { "title": "Getting Started", "order": 1 },
+  "guides": { "title": "Guides", "order": 2 }
+}
+```
+
+### Tạo trang
+
+Thêm file MDX vào thư mục:
+
+```bash
+touch content/docs/guides/deployment.mdx
+```
+
+</Steps>

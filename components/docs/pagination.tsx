@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { buildNavTree, type NavEntry, isNavGroup } from "@/lib/navigation";
 
@@ -15,8 +15,8 @@ function flattenTree(entries: NavEntry[]): { title: string; href: string }[] {
   return result;
 }
 
-export function DocPagination({ slug }: { slug: string }) {
-  const tree = buildNavTree();
+export function DocPagination({ slug, locale = "en" }: { slug: string; locale?: string }) {
+  const tree = buildNavTree(locale);
   const flat = flattenTree(tree);
   const currentHref = slug ? `/docs/${slug}` : "/docs";
   const index = flat.findIndex((item) => item.href === currentHref);

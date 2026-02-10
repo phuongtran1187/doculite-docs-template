@@ -1,0 +1,45 @@
+---
+title: Frontmatter
+description: Tham khảo các trường frontmatter trong MDX.
+order: 2
+---
+
+Mỗi file MDX bắt đầu bằng một khối YAML frontmatter giữa hai dấu `---`.
+
+## Trường bắt buộc
+
+```yaml
+---
+title: Tiêu đề trang
+---
+```
+
+Trường `title` là trường duy nhất bắt buộc. Nó xuất hiện ở header trang, sidebar, kết quả search, và tab trình duyệt.
+
+## Trường tùy chọn
+
+```yaml
+---
+title: Tiêu đề trang
+description: Mô tả ngắn về trang này.
+order: 1
+published: true
+---
+```
+
+## Tham khảo các trường
+
+| Trường | Kiểu | Mặc định | Mô tả |
+|--------|------|----------|-------|
+| `title` | `string` | bắt buộc | Tiêu đề trang (tối đa 120 ký tự) |
+| `description` | `string` | — | Mô tả cho SEO và search (tối đa 300 ký tự) |
+| `order` | `number` | `999` | Thứ tự sắp xếp trong thư mục |
+| `published` | `boolean` | `true` | Đặt `false` để ẩn khỏi production |
+
+<Callout type="tip" title="Thứ tự">
+  Các trang được sắp xếp theo giá trị `order`. Dùng bước nhảy 1 (1, 2, 3...) để dễ sắp xếp lại sau.
+</Callout>
+
+<Callout type="warning">
+  Trang chưa publish (`published: false`) bị loại khỏi sidebar, search, và pagination. Chúng vẫn render nếu truy cập trực tiếp trong quá trình phát triển.
+</Callout>

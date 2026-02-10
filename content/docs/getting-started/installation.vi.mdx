@@ -1,0 +1,55 @@
+---
+title: Cài đặt
+description: Hướng dẫn cài đặt và thiết lập Doculite.
+order: 1
+---
+
+## Yêu cầu
+
+- Node.js 18 hoặc mới hơn
+- pnpm 8+ (khuyến nghị), npm, hoặc yarn
+
+## Tạo dự án mới
+
+<Steps>
+
+### Sao chép mẫu
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">
+    ```bash
+    pnpm create next-app --example doculite-docs-template my-docs
+    ```
+  </Tab>
+  <Tab value="npm">
+    ```bash
+    npx create-next-app --example doculite-docs-template my-docs
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    yarn create next-app --example doculite-docs-template my-docs
+    ```
+  </Tab>
+</Tabs>
+
+### Cài đặt phụ thuộc
+
+```bash
+cd my-docs
+pnpm install
+```
+
+### Khởi động máy chủ phát triển
+
+```bash
+pnpm dev
+```
+
+Mở [http://localhost:3000](http://localhost:3000) trong trình duyệt của bạn.
+
+</Steps>
+
+<Callout type="tip" title="Tải lại nóng">
+  Máy chủ phát triển hỗ trợ tải lại nóng. Thay đổi đối với tệp MDX và component được phản ánh ngay lập tức.
+</Callout>

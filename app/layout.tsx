@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Providers } from "@/components/providers";
-import { SiteHeader } from "@/components/docs/site-header";
-import { SiteFooter } from "@/components/docs/site-footer";
+import { getLocale } from "next-intl/server";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
@@ -21,35 +19,22 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
   return (
     <html
       className="min-h-full overscroll-none"
-      lang="en"
+      lang={locale}
       suppressHydrationWarning
     >
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
-        <a
-          href="#content"
-          className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:bg-background focus:px-4 focus:py-2 focus:text-foreground"
-        >
-          Skip to content
-        </a>
-        <Providers>
-          <div className="relative flex min-h-svh flex-col">
-            <SiteHeader />
-            <main id="content" className="flex-1">
-              {children}
-            </main>
-            <SiteFooter />
-          </div>
-        </Providers>
+        {children}
       </body>
     </html>
   );

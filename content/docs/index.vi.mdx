@@ -1,0 +1,56 @@
+---
+title: Chào mừng đến với Doculite
+description: Template tài liệu hiện đại xây dựng với Next.js và shadcn/ui.
+order: 0
+---
+
+Một starter tài liệu nhẹ, dễ fork, xây dựng với Next.js, MDX, và shadcn/ui.
+
+## Tính năng
+
+<CardGroup cols={3}>
+  <Card title="MDX Content" href="/docs/writing-content/mdx-basics">
+    Viết tài liệu bằng MDX với hỗ trợ đầy đủ React component.
+  </Card>
+  <Card title="Syntax Highlighting" href="/docs/components/code-blocks">
+    Code blocks đẹp mắt với Shiki, hỗ trợ theme sáng/tối.
+  </Card>
+  <Card title="Search" href="/docs/getting-started/installation">
+    Tìm kiếm nhanh phía client trên tất cả trang tài liệu.
+  </Card>
+  <Card title="Components" href="/docs/components/callout">
+    Các MDX component phong phú như Callout, Tabs, Steps, và nhiều hơn.
+  </Card>
+  <Card title="Dark Mode" href="/docs/getting-started/configuration">
+    Tự động chuyển theme theo cài đặt hệ thống với next-themes.
+  </Card>
+  <Card title="Cấu hình đơn giản" href="/docs/getting-started/configuration">
+    Một file config cho tên site, navigation, và nhiều hơn.
+  </Card>
+</CardGroup>
+
+## Bắt đầu nhanh
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">
+    ```bash
+    pnpm create next-app --example doculite-docs-template my-docs
+    cd my-docs
+    pnpm dev
+    ```
+  </Tab>
+  <Tab value="npm">
+    ```bash
+    npx create-next-app --example doculite-docs-template my-docs
+    cd my-docs
+    npm run dev
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    yarn create next-app --example doculite-docs-template my-docs
+    cd my-docs
+    yarn dev
+    ```
+  </Tab>
+</Tabs>

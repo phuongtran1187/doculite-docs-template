@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { setRequestLocale } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import {
   FileText,
@@ -7,20 +8,23 @@ import {
   Palette,
   LayoutGrid,
   Terminal,
+  Globe,
 } from "lucide-react";
 
 const features = [
   {
     icon: FileText,
     title: "MDX Content",
-    description: "Write documentation in MDX with full React component support.",
+    description:
+      "Write documentation in MDX with full React component support.",
     color: "text-green-400",
     border: "border-green-500/20",
   },
   {
     icon: Code,
     title: "Syntax Highlighting",
-    description: "Beautiful code blocks powered by Shiki with dual theme support.",
+    description:
+      "Beautiful code blocks powered by Shiki with dual theme support.",
     color: "text-purple-400",
     border: "border-purple-500/20",
   },
@@ -46,11 +50,12 @@ const features = [
     border: "border-cyan-500/20",
   },
   {
-    icon: Terminal,
-    title: "Developer First",
-    description: "Built with Next.js 16, TypeScript, and Tailwind CSS v4.",
-    color: "text-yellow-400",
-    border: "border-yellow-500/20",
+    icon: Globe,
+    title: "Multi-language",
+    description:
+      "Built-in i18n with automatic fallback, language switcher, and SEO.",
+    color: "text-pink-400",
+    border: "border-pink-500/20",
   },
 ];
 
@@ -71,7 +76,9 @@ function CodePreview() {
       {/* Code content */}
       <pre className="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed">
         <code>
-          <span className="text-purple-700 dark:text-purple-400">export const</span>{" "}
+          <span className="text-purple-700 dark:text-purple-400">
+            export const
+          </span>{" "}
           <span className="text-blue-700 dark:text-blue-400">siteConfig</span>{" "}
           <span className="text-zinc-500">=</span>{" "}
           <span className="text-amber-700 dark:text-yellow-400">{"{"}</span>
@@ -79,13 +86,17 @@ function CodePreview() {
           {"  "}
           <span className="text-blue-600 dark:text-blue-300">name</span>
           <span className="text-zinc-500">:</span>{" "}
-          <span className="text-green-700 dark:text-green-400">{'"Doculite"'}</span>
+          <span className="text-green-700 dark:text-green-400">
+            {'"Doculite"'}
+          </span>
           <span className="text-zinc-500">,</span>
           {"\n"}
           {"  "}
           <span className="text-blue-600 dark:text-blue-300">description</span>
           <span className="text-zinc-500">:</span>{" "}
-          <span className="text-green-700 dark:text-green-400">{'"A modern docs template"'}</span>
+          <span className="text-green-700 dark:text-green-400">
+            {'"A modern docs template"'}
+          </span>
           <span className="text-zinc-500">,</span>
           {"\n"}
           {"  "}
@@ -94,14 +105,18 @@ function CodePreview() {
           <span className="text-amber-700 dark:text-yellow-400">{"["}</span>
           {"\n"}
           {"    "}
-          <span className="text-amber-700 dark:text-yellow-400">{"{"}</span>{" "}
+          <span className="text-amber-700 dark:text-yellow-400">
+            {"{"}
+          </span>{" "}
           <span className="text-blue-600 dark:text-blue-300">title</span>
           <span className="text-zinc-500">:</span>{" "}
           <span className="text-green-700 dark:text-green-400">{'"Docs"'}</span>
           <span className="text-zinc-500">,</span>{" "}
           <span className="text-blue-600 dark:text-blue-300">href</span>
           <span className="text-zinc-500">:</span>{" "}
-          <span className="text-green-700 dark:text-green-400">{'"\/docs"'}</span>{" "}
+          <span className="text-green-700 dark:text-green-400">
+            {'"\/docs"'}
+          </span>{" "}
           <span className="text-amber-700 dark:text-yellow-400">{"}"}</span>
           {"\n"}
           {"  "}
@@ -116,7 +131,15 @@ function CodePreview() {
   );
 }
 
-export default function Home() {
+// Home page stays English-only (i18n scope is docs only)
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   return (
     <div className="flex flex-col">
       {/* Hero */}
@@ -148,9 +171,9 @@ export default function Home() {
                 </span>
               </h1>
               <p className="mt-4 text-base leading-relaxed text-muted-foreground md:text-lg">
-                A lightweight, forkable documentation starter built with Next.js,
-                MDX, and shadcn/ui. Beautiful syntax highlighting, fast search,
-                and dark mode out of the box.
+                A lightweight, forkable documentation starter built with
+                Next.js, MDX, and shadcn/ui. Beautiful syntax highlighting, fast
+                search, and dark mode out of the box.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button asChild size="lg">
@@ -174,7 +197,9 @@ export default function Home() {
               </div>
               {/* Install snippet */}
               <div className="mt-6 w-full max-w-md rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-2.5 font-mono text-sm text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300">
-                <span className="select-none text-zinc-400 dark:text-zinc-600">$ </span>
+                <span className="select-none text-zinc-400 dark:text-zinc-600">
+                  ${" "}
+                </span>
                 <span className="text-green-700 dark:text-green-400">npx</span>{" "}
                 create-next-app --example doculite my-docs
               </div>

@@ -1,0 +1,70 @@
+---
+title: Code Blocks
+description: Code block có syntax highlighting với nút copy.
+order: 5
+---
+
+Code block được hỗ trợ bởi Shiki qua rehype-pretty-code. Hỗ trợ syntax highlighting cho nhiều ngôn ngữ với tự động chuyển theme sáng/tối.
+
+## Syntax Highlighting
+
+```tsx
+import { useState } from "react";
+
+export function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Count: {count}
+    </button>
+  );
+}
+```
+
+## Nhiều ngôn ngữ
+
+### TypeScript
+
+```ts
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+function getUser(id: string): User {
+  return { id, name: "Alice", email: "alice@example.com" };
+}
+```
+
+### Python
+
+```python
+def fibonacci(n: int) -> list[int]:
+    sequence = [0, 1]
+    for _ in range(2, n):
+        sequence.append(sequence[-1] + sequence[-2])
+    return sequence[:n]
+```
+
+### JSON
+
+```json
+{
+  "name": "my-docs",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build"
+  }
+}
+```
+
+## Inline Code
+
+Dùng backtick cho inline code: `const x = 42`.
+
+<Callout type="info">
+  Code block hỗ trợ tất cả ngôn ngữ mà Shiki hỗ trợ. Xem danh sách đầy đủ trong tài liệu Shiki.
+</Callout>

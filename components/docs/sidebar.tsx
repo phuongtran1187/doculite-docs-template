@@ -2,8 +2,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { buildNavTree } from "@/lib/navigation";
 import { SidebarNavItem } from "@/components/docs/sidebar-nav-item";
 
-export function Sidebar() {
-  const tree = buildNavTree();
+export function Sidebar({ locale = "en" }: { locale?: string }) {
+  const tree = buildNavTree(locale);
 
   return (
     <ScrollArea className="h-full py-6 pr-4">

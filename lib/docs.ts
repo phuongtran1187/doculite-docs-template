@@ -38,3 +38,19 @@ export function isDocTranslated(slug: string, locale: Locale): boolean {
     (doc) => doc.slugAsParams === slug && doc.locale === locale,
   );
 }
+
+/**
+ * Get all locales that have actual translations for a given slug.
+ * Always includes DEFAULT_LOCALE (EN is always available as fallback).
+ * Used to build hreflang alternate links for SEO.
+ */
+export function getAvailableLocales(slug: string): Locale[] {
+  const locales = new Set<Locale>();
+  locales.add(DEFAULT_LOCALE);
+  for (const doc of docs) {
+    if (doc.slugAsParams === slug && doc.published) {
+      locales.add(doc.locale as Locale);
+    }
+  }
+  return Array.from(locales);
+}

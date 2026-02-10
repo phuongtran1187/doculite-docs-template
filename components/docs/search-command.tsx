@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { FileText, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +21,7 @@ interface SearchCommandProps {
 
 export function SearchCommand({ entries }: SearchCommandProps) {
   const router = useRouter();
+  const t = useTranslations("common");
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -61,7 +63,7 @@ export function SearchCommand({ entries }: SearchCommandProps) {
         onClick={() => setOpen(true)}
       >
         <Search className="size-5" />
-        <span className="sr-only">Search</span>
+        <span className="sr-only">{t("searchShort")}</span>
       </Button>
       {/* Full button on desktop */}
       <Button
@@ -70,17 +72,17 @@ export function SearchCommand({ entries }: SearchCommandProps) {
         onClick={() => setOpen(true)}
       >
         <Search className="mr-2 size-4" />
-        <span className="hidden lg:inline-flex">Search documentation...</span>
-        <span className="inline-flex lg:hidden">Search...</span>
+        <span className="hidden lg:inline-flex">{t("search")}</span>
+        <span className="inline-flex lg:hidden">{t("searchShort")}</span>
         <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-6 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
           <span className="text-xs">⌘</span>K
         </kbd>
       </Button>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search documentation..." />
+        <CommandInput placeholder={t("search")} />
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandEmpty>{t("noResults")}</CommandEmpty>
           {Object.entries(grouped).map(([category, items]) => (
             <CommandGroup
               key={category}
