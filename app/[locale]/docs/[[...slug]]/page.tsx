@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { getDocBySlug, getAllDocs } from "@/lib/docs";
-import { SUPPORTED_LOCALES, type Locale } from "@/lib/i18n-config";
+import { getDocBySlug, getAllDocs, getAvailableLocales } from "@/lib/docs";
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE, type Locale } from "@/lib/i18n-config";
 import { MdxContent } from "@/components/docs/mdx-content";
 import { Toc } from "@/components/docs/toc";
 import { DocBreadcrumbs } from "@/components/docs/breadcrumbs";
@@ -33,9 +33,27 @@ export async function generateMetadata({
   const slugPath = slug?.join("/") || "";
   const result = getDocBySlug(slugPath, locale as Locale);
   if (!result) return {};
+
+  const availableLocales = getAvailableLocales(slugPath);
+  const hrefForLocale = (l: string) => {
+    const path = slugPath ? `/docs/${slugPath}` : "/docs";
+    return l === DEFAULT_LOCALE
+      ? `${siteConfig.url}${path}`
+      : `${siteConfig.url}/${l}${path}`;
+  };
+
   return {
     title: result.doc.title,
     description: result.doc.description,
+    alternates: {
+      canonical: hrefForLocale(locale),
+      languages: {
+        ...Object.fromEntries(
+          availableLocales.map((l) => [l, hrefForLocale(l)])
+        ),
+        "x-default": hrefForLocale(DEFAULT_LOCALE),
+      },
+    },
   };
 }
 
@@ -48,6 +66,13 @@ export default async function DocPage({ params }: DocPageProps) {
   if (!result) notFound();
 
   const { doc, isFallback } = result;
+
+  // Edit link: point to locale-specific file if not a fallback
+  const editFileName = slugPath || "index";
+  const editSuffix = !isFallback && locale !== DEFAULT_LOCALE ? `.${locale}` : "";
+  const editHref = siteConfig.github?.editUrl
+    ? `${siteConfig.github.editUrl}/docs/${editFileName}${editSuffix}.mdx`
+    : null;
 
   return (
     <>
@@ -65,10 +90,10 @@ export default async function DocPage({ params }: DocPageProps) {
         <div className="mdx mt-8">
           <MdxContent code={doc.body} />
         </div>
-        {siteConfig.github?.editUrl && (
+        {editHref && (
           <div className="mt-8">
             <a
-              href={`${siteConfig.github.editUrl}/docs/${slugPath || "index"}.mdx`}
+              href={editHref}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
