@@ -1,0 +1,4 @@
+{
+  "installation": { "title": "Installation", "order": 1 },
+  "configuration": { "title": "Configuration", "order": 2 }
+}
