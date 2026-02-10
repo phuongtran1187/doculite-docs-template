@@ -1,0 +1,16 @@
+{
+  "common": {
+    "search": "Tìm kiếm tài liệu...",
+    "searchShort": "Tìm kiếm...",
+    "noResults": "Không tìm thấy kết quả.",
+    "editOnGithub": "Chỉnh sửa trang này trên GitHub",
+    "skipToContent": "Chuyển đến nội dung"
+  },
+  "i18n": {
+    "switchLanguage": "Ngôn ngữ",
+    "untranslatedBanner": "Trang này chưa có bản dịch tiếng {language}. Đang hiển thị phiên bản tiếng Anh."
+  },
+  "footer": {
+    "builtWith": "Xây dựng với Doculite."
+  }
+}

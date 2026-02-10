@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import { build } from "velite";
+import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   webpack: (config) => {
@@ -20,4 +21,6 @@ class VeliteWebpackPlugin {
   }
 }
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
+
+export default withNextIntl(nextConfig);

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { setRequestLocale } from "next-intl/server";
 import { getDocBySlug, getAllDocs } from "@/lib/docs";
+import { SUPPORTED_LOCALES, type Locale } from "@/lib/i18n-config";
 import { MdxContent } from "@/components/docs/mdx-content";
 import { Toc } from "@/components/docs/toc";
 import { DocBreadcrumbs } from "@/components/docs/breadcrumbs";
@@ -8,25 +10,27 @@ import { DocPagination } from "@/components/docs/pagination";
 import { siteConfig } from "@/lib/site-config";
 
 interface DocPageProps {
-  params: Promise<{ slug?: string[] }>;
+  params: Promise<{ locale: string; slug?: string[] }>;
 }
 
 export async function generateStaticParams() {
-  const docs = getAllDocs();
-  return [
-    { slug: [] }, // /docs index
-    ...docs
-      .filter((doc) => doc.slugAsParams !== "")
-      .map((doc) => ({ slug: doc.slugAsParams.split("/") })),
-  ];
+  return SUPPORTED_LOCALES.flatMap((locale) => {
+    const docs = getAllDocs(locale);
+    return [
+      { locale, slug: [] },
+      ...docs
+        .filter((doc) => doc.slugAsParams !== "")
+        .map((doc) => ({ locale, slug: doc.slugAsParams.split("/") })),
+    ];
+  });
 }
 
 export async function generateMetadata({
   params,
 }: DocPageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const slugPath = slug?.join("/") || "";
-  const result = getDocBySlug(slugPath);
+  const result = getDocBySlug(slugPath, locale as Locale);
   if (!result) return {};
   return {
     title: result.doc.title,
@@ -35,9 +39,10 @@ export async function generateMetadata({
 }
 
 export default async function DocPage({ params }: DocPageProps) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
   const slugPath = slug?.join("/") || "";
-  const result = getDocBySlug(slugPath);
+  const result = getDocBySlug(slugPath, locale as Locale);
 
   if (!result) notFound();
 

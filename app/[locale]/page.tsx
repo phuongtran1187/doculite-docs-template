@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { setRequestLocale } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import {
   FileText,
@@ -116,7 +117,15 @@ function CodePreview() {
   );
 }
 
-export default function Home() {
+// Home page stays English-only (i18n scope is docs only)
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   return (
     <div className="flex flex-col">
       {/* Hero */}

@@ -1,0 +1,16 @@
+{
+  "common": {
+    "search": "Search documentation...",
+    "searchShort": "Search...",
+    "noResults": "No results found.",
+    "editOnGithub": "Edit this page on GitHub",
+    "skipToContent": "Skip to content"
+  },
+  "i18n": {
+    "switchLanguage": "Language",
+    "untranslatedBanner": "This page is not yet available in {language}. Showing English version."
+  },
+  "footer": {
+    "builtWith": "Built with Doculite."
+  }
+}
