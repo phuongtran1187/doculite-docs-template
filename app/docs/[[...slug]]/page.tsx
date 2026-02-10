@@ -26,20 +26,22 @@ export async function generateMetadata({
 }: DocPageProps): Promise<Metadata> {
   const { slug } = await params;
   const slugPath = slug?.join("/") || "";
-  const doc = getDocBySlug(slugPath);
-  if (!doc) return {};
+  const result = getDocBySlug(slugPath);
+  if (!result) return {};
   return {
-    title: doc.title,
-    description: doc.description,
+    title: result.doc.title,
+    description: result.doc.description,
   };
 }
 
 export default async function DocPage({ params }: DocPageProps) {
   const { slug } = await params;
   const slugPath = slug?.join("/") || "";
-  const doc = getDocBySlug(slugPath);
+  const result = getDocBySlug(slugPath);
 
-  if (!doc) notFound();
+  if (!result) notFound();
+
+  const { doc } = result;
 
   return (
     <>

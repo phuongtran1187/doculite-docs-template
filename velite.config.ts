@@ -2,6 +2,7 @@ import { defineConfig, defineCollection, s } from "velite";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "./lib/i18n-config";
 
 const docs = defineCollection({
   name: "Doc",
@@ -16,11 +17,26 @@ const docs = defineCollection({
       body: s.mdx(),
       toc: s.toc(),
     })
-    .transform((data) => ({
-      ...data,
-      // Strip leading "docs/" prefix so slugAsParams matches route params
-      slugAsParams: data.slug.split("/").slice(1).join("/"),
-    })),
+    .transform((data) => {
+      // Strip leading "docs/" prefix
+      const rawSlug = data.slug.split("/").slice(1).join("/");
+      const segments = rawSlug.split("/");
+      const lastSegment = segments[segments.length - 1] || "";
+      const dotIndex = lastSegment.lastIndexOf(".");
+      let locale = DEFAULT_LOCALE;
+      let cleanSlug = rawSlug;
+
+      if (dotIndex > 0) {
+        const suffix = lastSegment.slice(dotIndex + 1);
+        if ((SUPPORTED_LOCALES as readonly string[]).includes(suffix)) {
+          locale = suffix as (typeof SUPPORTED_LOCALES)[number];
+          segments[segments.length - 1] = lastSegment.slice(0, dotIndex);
+          cleanSlug = segments.join("/");
+        }
+      }
+
+      return { ...data, locale, slugAsParams: cleanSlug };
+    }),
 });
 
 export default defineConfig({
