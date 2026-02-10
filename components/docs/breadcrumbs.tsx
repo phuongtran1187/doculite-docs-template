@@ -6,7 +6,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-// BreadcrumbLink kept for "Docs" root link
 import { Fragment } from "react";
 
 function formatTitle(slug: string): string {

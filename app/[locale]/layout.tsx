@@ -32,7 +32,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           >
             Skip to content
           </a>
-          <SiteHeader />
+          <SiteHeader locale={locale} />
           <main id="content" className="flex-1">
             {children}
           </main>

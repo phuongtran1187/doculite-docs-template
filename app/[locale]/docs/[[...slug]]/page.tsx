@@ -7,6 +7,7 @@ import { MdxContent } from "@/components/docs/mdx-content";
 import { Toc } from "@/components/docs/toc";
 import { DocBreadcrumbs } from "@/components/docs/breadcrumbs";
 import { DocPagination } from "@/components/docs/pagination";
+import { FallbackBanner } from "@/components/docs/fallback-banner";
 import { siteConfig } from "@/lib/site-config";
 
 interface DocPageProps {
@@ -46,12 +47,13 @@ export default async function DocPage({ params }: DocPageProps) {
 
   if (!result) notFound();
 
-  const { doc } = result;
+  const { doc, isFallback } = result;
 
   return (
     <>
       <div className="mx-auto w-full min-w-0">
         <DocBreadcrumbs slug={slugPath} />
+        {isFallback && <FallbackBanner locale={locale as Locale} />}
         <div className="space-y-2">
           <h1 className="scroll-m-20 text-2xl font-bold tracking-tight md:text-4xl">
             {doc.title}
@@ -75,7 +77,7 @@ export default async function DocPage({ params }: DocPageProps) {
             </a>
           </div>
         )}
-        <DocPagination slug={slugPath} />
+        <DocPagination slug={slugPath} locale={locale} />
       </div>
       <div className="hidden text-sm xl:block">
         <Toc toc={doc.toc} />

@@ -1,15 +1,16 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 import { ThemeToggle } from "@/components/docs/theme-toggle";
 import { SearchCommand } from "@/components/docs/search-command";
 import { MobileNav } from "@/components/docs/mobile-nav";
+import { LanguageSwitcher } from "@/components/docs/language-switcher";
 import { siteConfig } from "@/lib/site-config";
 import { getSearchIndex } from "@/lib/search";
 import { buildNavTree } from "@/lib/navigation";
 
-export function SiteHeader() {
-  const entries = getSearchIndex();
-  const tree = buildNavTree();
+export function SiteHeader({ locale = "en" }: { locale?: string }) {
+  const entries = getSearchIndex(locale);
+  const tree = buildNavTree(locale);
   const githubLink = siteConfig.socialLinks?.find((link) => link.platform === "github");
 
   return (
@@ -55,6 +56,7 @@ export function SiteHeader() {
               <span className="sr-only">GitHub</span>
             </a>
           )}
+          <LanguageSwitcher />
           <ThemeToggle />
         </div>
       </div>
