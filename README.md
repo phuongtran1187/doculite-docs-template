@@ -1,6 +1,6 @@
 # Doculite
 
-A modern, lightweight documentation template built with Next.js 15 and shadcn/ui.
+A modern, lightweight documentation template built with Next.js 16 and shadcn/ui.
 
 ## Features
 
@@ -38,7 +38,7 @@ Custom MDX components live in `components/mdx/`. They're registered in `mdx-comp
 
 ## Tech Stack
 
-- [Next.js 15](https://nextjs.org) — App Router, SSG
+- [Next.js 16](https://nextjs.org) — App Router, SSG
 - [Velite](https://velite.js.org) — Content layer for MDX
 - [shadcn/ui](https://ui.shadcn.com) — UI components
 - [Tailwind CSS v4](https://tailwindcss.com) — Styling
