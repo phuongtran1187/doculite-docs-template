@@ -1,0 +1,65 @@
+---
+title: File Tree
+description: Hiển thị cấu trúc thư mục dưới dạng cây trực quan.
+order: 6
+---
+
+Component FileTree hiển thị cấu trúc file và thư mục. Hữu ích cho việc trình bày layout dự án và tổ chức content.
+
+## Cách dùng cơ bản
+
+<FileTree>
+  <Folder name="src">
+    <File name="index.ts" />
+    <File name="utils.ts" />
+  </Folder>
+  <File name="package.json" />
+</FileTree>
+
+```mdx
+<FileTree>
+  <Folder name="src">
+    <File name="index.ts" />
+    <File name="utils.ts" />
+  </Folder>
+  <File name="package.json" />
+</FileTree>
+```
+
+## Cấu trúc lồng nhau
+
+<FileTree>
+  <Folder name="app">
+    <File name="layout.tsx" />
+    <File name="page.tsx" />
+    <Folder name="docs">
+      <File name="layout.tsx" />
+      <Folder name="[[...slug]]">
+        <File name="page.tsx" />
+      </Folder>
+    </Folder>
+    <Folder name="api">
+      <Folder name="health">
+        <File name="route.ts" />
+      </Folder>
+    </Folder>
+  </Folder>
+</FileTree>
+
+## Props
+
+### FileTree
+
+Component wrapper. Nhận children là các component `Folder` và `File`.
+
+### Folder
+
+| Prop | Kiểu | Mô tả |
+|------|------|-------|
+| `name` | `string` | Tên thư mục |
+
+### File
+
+| Prop | Kiểu | Mô tả |
+|------|------|-------|
+| `name` | `string` | Tên file |

@@ -1,0 +1,63 @@
+---
+title: MDX cơ bản
+description: Học cách viết tài liệu với MDX.
+order: 1
+---
+
+MDX cho phép bạn dùng React component bên trong Markdown. Viết Markdown bình thường, sau đó thêm component bất cứ khi nào cần nội dung tương tác hoặc có style.
+
+## Cú pháp Markdown
+
+Tất cả cú pháp Markdown tiêu chuẩn đều hoạt động: heading, list, link, hình ảnh, code block, bảng, và blockquote.
+
+### Định dạng văn bản
+
+| Cú pháp | Kết quả |
+|---------|---------|
+| `**bold**` | **bold** |
+| `*italic*` | *italic* |
+| `` `code` `` | `code` |
+| `[link](url)` | [link](#) |
+
+### Code Blocks
+
+Dùng fenced code block với language identifier để có syntax highlighting:
+
+~~~mdx
+```tsx
+function Hello() {
+  return <div>Hello World</div>;
+}
+```
+~~~
+
+## Sử dụng Components
+
+Import và dùng React component trực tiếp trong file MDX:
+
+```mdx
+<Callout type="info" title="Note">
+  Đây là callout thông tin.
+</Callout>
+```
+
+<Callout type="info" title="Note">
+  Đây là callout thông tin được render từ ví dụ trên.
+</Callout>
+
+## Các Component có sẵn
+
+<CardGroup>
+  <Card title="Callout" href="/docs/components/callout">
+    Callout cho info, warning, danger, và tip.
+  </Card>
+  <Card title="Tabs" href="/docs/components/tabs">
+    Panel nội dung dạng tab cho ví dụ code.
+  </Card>
+  <Card title="Steps" href="/docs/components/steps">
+    Hướng dẫn từng bước có đánh số.
+  </Card>
+  <Card title="Cards" href="/docs/components/cards">
+    Card có link trong bố cục grid.
+  </Card>
+</CardGroup>

@@ -1,0 +1,77 @@
+---
+title: Callout
+description: Làm nổi bật thông tin quan trọng với các hộp callout có style.
+order: 1
+---
+
+Callout thu hút sự chú ý đến thông tin quan trọng. Dùng cho tip, warning, và ghi chú.
+
+## Các biến thể
+
+### Info
+
+<Callout type="info" title="Thông tin">
+  Đây là callout thông tin cho ghi chú chung.
+</Callout>
+
+```mdx
+<Callout type="info" title="Thông tin">
+  Đây là callout thông tin cho ghi chú chung.
+</Callout>
+```
+
+### Warning
+
+<Callout type="warning" title="Cảnh báo">
+  Callout này cảnh báo về các vấn đề tiềm ẩn.
+</Callout>
+
+```mdx
+<Callout type="warning" title="Cảnh báo">
+  Callout này cảnh báo về các vấn đề tiềm ẩn.
+</Callout>
+```
+
+### Danger
+
+<Callout type="danger" title="Nguy hiểm">
+  Callout này nhấn mạnh vấn đề nghiêm trọng hoặc breaking change.
+</Callout>
+
+```mdx
+<Callout type="danger" title="Nguy hiểm">
+  Callout này nhấn mạnh vấn đề nghiêm trọng hoặc breaking change.
+</Callout>
+```
+
+### Tip
+
+<Callout type="tip" title="Mẹo">
+  Callout này chia sẻ mẹo hữu ích và best practice.
+</Callout>
+
+```mdx
+<Callout type="tip" title="Mẹo">
+  Callout này chia sẻ mẹo hữu ích và best practice.
+</Callout>
+```
+
+## Không có tiêu đề
+
+<Callout type="info">
+  Callout cũng hoạt động mà không cần tiêu đề.
+</Callout>
+
+```mdx
+<Callout type="info">
+  Callout cũng hoạt động mà không cần tiêu đề.
+</Callout>
+```
+
+## Props
+
+| Prop | Kiểu | Mặc định | Mô tả |
+|------|------|----------|-------|
+| `type` | `"info" \| "warning" \| "danger" \| "tip"` | `"info"` | Biến thể callout |
+| `title` | `string` | — | Tiêu đề tùy chọn |
+| `children` | `ReactNode` | bắt buộc | Nội dung callout |

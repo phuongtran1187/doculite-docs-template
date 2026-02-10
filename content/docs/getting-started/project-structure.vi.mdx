@@ -1,0 +1,58 @@
+---
+title: Cấu trúc dự án
+description: Tổng quan cấu trúc file của dự án Doculite.
+order: 2
+---
+
+## Bố cục thư mục
+
+<FileTree>
+  <Folder name="content">
+    <Folder name="docs">
+      <File name="_meta.json" />
+      <File name="index.mdx" />
+      <Folder name="getting-started">
+        <File name="_meta.json" />
+        <File name="installation.mdx" />
+      </Folder>
+    </Folder>
+  </Folder>
+  <Folder name="app">
+    <File name="layout.tsx" />
+    <File name="page.tsx" />
+    <Folder name="docs">
+      <File name="layout.tsx" />
+      <Folder name="[[...slug]]">
+        <File name="page.tsx" />
+      </Folder>
+    </Folder>
+  </Folder>
+  <Folder name="components">
+    <Folder name="docs" />
+    <Folder name="mdx" />
+    <Folder name="ui" />
+  </Folder>
+  <Folder name="lib" />
+  <File name="velite.config.ts" />
+  <File name="next.config.ts" />
+  <File name="package.json" />
+</FileTree>
+
+## Thư mục chính
+
+| Thư mục | Mục đích |
+|---------|----------|
+| `content/docs/` | Các file tài liệu MDX |
+| `app/docs/` | Route handler Next.js cho docs |
+| `components/docs/` | Component layout tài liệu |
+| `components/mdx/` | Component MDX tùy chỉnh |
+| `components/ui/` | shadcn/ui primitives |
+| `lib/` | Hàm tiện ích và cấu hình |
+
+## Thư mục Content
+
+Tất cả nội dung tài liệu nằm trong `content/docs/`. Mỗi file `.mdx` trở thành một trang. Thư mục tạo nhóm navigation được điều khiển bởi file `_meta.json`.
+
+<Callout type="info">
+  Velite xử lý thư mục `content/` lúc build và tạo dữ liệu typed trong `.velite/`.
+</Callout>

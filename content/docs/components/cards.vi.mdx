@@ -1,0 +1,60 @@
+---
+title: Cards
+description: Hiển thị card có link trong bố cục grid.
+order: 4
+---
+
+Card trình bày link navigation hoặc feature highlight trong grid trực quan. Dùng `CardGroup` để sắp xếp nhiều card.
+
+## Card Group
+
+<CardGroup>
+  <Card title="Bắt đầu" href="/docs/getting-started/installation">
+    Tìm hiểu cách cài đặt và thiết lập Doculite.
+  </Card>
+  <Card title="Viết nội dung" href="/docs/writing-content/mdx-basics">
+    Viết tài liệu với MDX.
+  </Card>
+</CardGroup>
+
+```mdx
+<CardGroup>
+  <Card title="Bắt đầu" href="/docs/getting-started/installation">
+    Tìm hiểu cách cài đặt và thiết lập Doculite.
+  </Card>
+  <Card title="Viết nội dung" href="/docs/writing-content/mdx-basics">
+    Viết tài liệu với MDX.
+  </Card>
+</CardGroup>
+```
+
+## Ba cột
+
+<CardGroup cols={3}>
+  <Card title="Callout">Làm nổi bật thông tin quan trọng.</Card>
+  <Card title="Tabs">Tổ chức nội dung thành panel.</Card>
+  <Card title="Steps">Hướng dẫn từng bước có đánh số.</Card>
+</CardGroup>
+
+```mdx
+<CardGroup cols={3}>
+  <Card title="Callout">Làm nổi bật thông tin quan trọng.</Card>
+  <Card title="Tabs">Tổ chức nội dung thành panel.</Card>
+  <Card title="Steps">Hướng dẫn từng bước có đánh số.</Card>
+</CardGroup>
+```
+
+## Props
+
+### CardGroup
+
+| Prop | Kiểu | Mặc định | Mô tả |
+|------|------|----------|-------|
+| `cols` | `2 \| 3` | `2` | Số cột |
+
+### Card
+
+| Prop | Kiểu | Mô tả |
+|------|------|-------|
+| `title` | `string` | Tiêu đề card |
+| `href` | `string?` | URL link tùy chọn |

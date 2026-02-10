@@ -1,0 +1,63 @@
+---
+title: Cấu hình
+description: Cấu hình site tài liệu Doculite của bạn.
+order: 3
+---
+
+## Cấu hình Site
+
+Chỉnh sửa `lib/site-config.ts` để tùy chỉnh site tài liệu:
+
+```ts
+import type { DoculiteConfig } from "@/lib/config-types";
+
+export const siteConfig: DoculiteConfig = {
+  name: "My Docs",
+  description: "Documentation for my project.",
+  url: "https://docs.example.com",
+  navLinks: [
+    { title: "Docs", href: "/docs" },
+    { title: "GitHub", href: "https://github.com/...", external: true },
+  ],
+  socialLinks: [
+    { platform: "github", url: "https://github.com/..." },
+  ],
+  footer: {
+    text: "Built with Doculite.",
+  },
+  github: {
+    repo: "owner/repo",
+    editUrl: "https://github.com/owner/repo/edit/main/content",
+  },
+};
+```
+
+## Các trường cấu hình
+
+| Trường | Kiểu | Mô tả |
+|--------|------|-------|
+| `name` | `string` | Tên site hiển thị ở header và metadata |
+| `description` | `string` | Mô tả site cho SEO |
+| `url` | `string?` | URL production |
+| `navLinks` | `NavLink[]` | Link navigation ở header |
+| `socialLinks` | `SocialLink[]?` | Link mạng xã hội (GitHub, Twitter, Discord) |
+| `footer.text` | `string?` | Văn bản footer |
+| `github.repo` | `string?` | GitHub repository (owner/repo) |
+| `github.editUrl` | `string?` | URL gốc cho link "Edit this page" |
+
+<Callout type="warning" title="Cần khởi động lại">
+  Thay đổi cấu hình cần khởi động lại server phát triển vì config được import lúc build time.
+</Callout>
+
+## Cấu hình Content
+
+### Velite Schema
+
+Schema content được định nghĩa trong `velite.config.ts`. Mỗi file MDX hỗ trợ các trường frontmatter sau:
+
+| Trường | Kiểu | Mặc định | Mô tả |
+|--------|------|----------|-------|
+| `title` | `string` | bắt buộc | Tiêu đề trang |
+| `description` | `string?` | — | Mô tả trang cho SEO và search |
+| `order` | `number` | `999` | Thứ tự sắp xếp trong sidebar |
+| `published` | `boolean` | `true` | Trang có hiển thị trong production không |
