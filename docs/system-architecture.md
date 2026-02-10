@@ -3,62 +3,97 @@
 ## High-Level Overview
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    Doculite Documentation                   │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌──────────────┐         ┌─────────────────────────────┐  │
-│  │  MDX Content │◄────────┤  Velite Content Layer       │  │
-│  │  (content/)  │         │  • Locale extraction        │  │
-│  │              │         │  • Type generation          │  │
-│  │  *.mdx       │         │  • Syntax highlighting      │  │
-│  │  *.vi.mdx    │         └─────────────────────────────┘  │
-│  └──────────────┘                    ▲                     │
-│                                      │                     │
-│                     ┌────────────────┴─────────────┐       │
-│                     │ .velite/index.js             │       │
-│                     │ .velite/index.d.ts           │       │
-│                     └────────────────┬─────────────┘       │
-│                                      │                     │
-│  ┌──────────────────────────────────▼────────────────┐    │
-│  │           Data Access Layer (lib/docs.ts)         │    │
-│  │                                                  │    │
-│  │  getDocBySlug(slug, locale?)      → Doc | null  │    │
-│  │  getAllDocs(locale?)               → Doc[]      │    │
-│  │  getDocsByDirectory(dir, locale?) → Doc[]      │    │
-│  │  isDocTranslated(slug, locale)    → boolean    │    │
-│  │                                                  │    │
-│  │  Fallback: Requested Locale → EN → null        │    │
-│  └──────────────────────────────────┬───────────────┘    │
-│                                      │                     │
-│  ┌──────────────────────────────────▼───────────────┐    │
-│  │          Next.js App Router (app/)                │    │
-│  │                                                  │    │
-│  │  /docs/[[...slug]]/page.tsx                      │    │
-│  │  • Generates static params (all docs)           │    │
-│  │  • Renders doc with layout                       │    │
-│  │  • Shows 404 if doc not found                    │    │
-│  │                                                  │    │
-│  │  /api/search (future: Phase 3)                  │    │
-│  │  • Full-text search endpoint                     │    │
-│  │  • Locale filtering (Phase 3)                    │    │
-│  └──────────────────────────────────┬───────────────┘    │
-│                                      │                     │
-│  ┌──────────────────────────────────▼───────────────┐    │
-│  │       Component Layer                             │    │
-│  │                                                  │    │
-│  │  Layout: breadcrumbs, sidebar, TOC, pagination  │    │
-│  │  MDX:    Callout, Tabs, Steps, Cards, Code     │    │
-│  │  UI:     shadcn/ui primitives                   │    │
-│  │                                                  │    │
-│  │  Search: Command palette (cmdk)                 │    │
-│  │  Theme:  Dark/light mode toggle (next-themes)  │    │
-│  └──────────────────────────────────────────────────┘    │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                    Doculite Documentation (Phase 2)             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌──────────┐  GET /vi/docs/guides/routing                     │
+│  │  Browser │◄─────────────────┐                               │
+│  └──────────┘                   │ Response                      │
+│      │                          │                              │
+│      └─ Request ────────────────┼────────────────────────────┐ │
+│                                 │                            │ │
+│  ┌─────────────────────────────▼──────────────────┐         │ │
+│  │  middleware.ts (next-intl)                     │         │ │
+│  │  • Parse locale from URL: "vi"                │         │ │
+│  │  • Validate against SUPPORTED_LOCALES         │         │ │
+│  │  • Set X-locale-preferred header              │         │ │
+│  │  • Redirect if invalid locale                 │         │ │
+│  └─────────────────────────────┬──────────────────┘         │ │
+│                                 │ Locale: "vi"               │ │
+│  ┌─────────────────────────────▼──────────────────────┐     │ │
+│  │  Next.js Route Handler                          │     │ │
+│  │  app/[locale]/docs/[[...slug]]/page.tsx        │     │ │
+│  │                                                  │     │ │
+│  │  • Get locale: "vi" from route params          │     │ │
+│  │  • Get slug: "guides/routing"                  │     │ │
+│  │  • Call getDocBySlug(slug, locale)             │     │ │
+│  │  • generateStaticParams() pre-renders all      │     │ │
+│  │    docs × locales at build time                │     │ │
+│  └─────────────────────────────┬──────────────────────┘     │ │
+│                                 │                            │ │
+│  ┌──────────────────────────────▼────────────────────────┐  │ │
+│  │  Velite Content Layer (.velite/)                      │  │ │
+│  │  ┌──────────────────────────────────────────────────┐ │  │ │
+│  │  │ MDX Content (content/docs/guides/routing.vi.mdx) │ │  │ │
+│  │  │ • Compiled to JS                                │ │  │ │
+│  │  │ • Locale: "vi", slugAsParams: "guides/routing" │ │  │ │
+│  │  │ • With syntax highlighting via Shiki            │ │  │ │
+│  │  └──────────────────────────────────────────────────┘ │  │ │
+│  └─────────────────────────────┬────────────────────────────┘  │ │
+│                                 │                               │ │
+│  ┌──────────────────────────────▼────────────────────────────┐ │ │
+│  │  Data Access Layer (lib/docs.ts)                         │ │ │
+│  │  • getDocBySlug("guides/routing", "vi")                 │ │ │
+│  │  • Returns: { doc, isFallback } | null                 │ │ │
+│  │  • Fallback: vi → en → null                            │ │ │
+│  └─────────────────────────────┬────────────────────────────┘ │ │
+│                                 │ Doc object                   │ │
+│  ┌──────────────────────────────▼────────────────────────────┐ │ │
+│  │  Component Layer                                          │ │ │
+│  │  • Docs Layout (breadcrumbs, sidebar, TOC, pagination)   │ │ │
+│  │  • MDX Components (Callout, Tabs, Steps, Cards, Code)    │ │ │
+│  │  • shadcn/ui primitives                                  │ │ │
+│  │  • Theme toggle, Search (cmdk)                           │ │ │
+│  └─────────────────────────────┬────────────────────────────┘ │ │
+│                                 │                               │ │
+│                                 └──────────────────────────────┘ │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ## Data Flow Layers
+
+### 0. Request Routing (middleware.ts)
+
+**Input:** Incoming HTTP request
+
+**Processing:**
+```
+GET http://example.com/vi/docs/guides/routing
+   │
+   ├─ middleware.ts (via createMiddleware(routing))
+   │  ├─ Parse URL path: "/vi/docs/guides/routing"
+   │  ├─ Extract locale from first segment: "vi"
+   │  ├─ Validate locale in SUPPORTED_LOCALES: ✓
+   │  ├─ Set request locale context
+   │  └─ Continue to route handler
+   │
+   └─ app/[locale]/docs/[[...slug]]/page.tsx
+      └─ Receives: locale="vi", slug=["guides", "routing"]
+```
+
+**Middleware Matcher:**
+- Include: `/((?!api|_next|_vercel|.*\..*).*)` (all routes except static/internal)
+- Excludes: `/api/*`, `/_next/*`, `/_vercel/*`, static files (`.css`, `.js`, etc.)
+
+**Invalid Locale Handling:**
+```
+GET /unknown/docs/guides/routing
+   │
+   ├─ middleware: locale "unknown" NOT in SUPPORTED_LOCALES
+   └─ Redirect to /en/docs/guides/routing (defaultLocale)
+```
 
 ### 1. Content Layer (Velite)
 
@@ -140,29 +175,55 @@ getDocBySlug("guides/routing", "vi")
 
 **Caller responsibility:** Check `isFallback` flag to render "not translated" banner
 
-### 3. Route Layer (app/docs/[[...slug]]/page.tsx)
+### 3. Route Layer (app/[locale]/docs/[[...slug]]/page.tsx)
 
-**Input:** URL params from Next.js router
+**Input:** Route params from Next.js router
 
 **Processing:**
 ```
-GET /docs/guides/routing
+GET /vi/docs/guides/routing (via middleware)
   │
+  ├─ Route params: { locale: "vi", slug: ["guides", "routing"] }
   ├─ Extract slug: "guides/routing"
-  ├─ Call getDocBySlug("guides/routing", locale?)
+  ├─ Get locale from route: "vi"
+  ├─ Call getDocBySlug("guides/routing", "vi")
   ├─ If result is null → notFound() (404)
   ├─ If result exists → render doc
+  │  └─ If isFallback=true → show "not translated" banner
   │
   ├─ In generateStaticParams():
-  │  ├─ Get all published docs for current locale (Phase 1: EN only)
-  │  ├─ Generate static paths: /docs, /docs/guides/routing, etc.
-  │  └─ Pre-render all pages at build time
+  │  ├─ For each supported locale:
+  │  │  ├─ Get all published docs in that locale
+  │  │  ├─ Generate params: { locale, slug: ["guides", "routing"] }
+  │  │  └─ Pre-render /vi/docs/guides/routing, etc.
+  │  └─ Scales: docs × locales static paths
   │
   └─ In generateMetadata():
-     └─ Use doc.title, doc.description for <head> tags
+     ├─ Use doc.title, doc.description for <head> tags
+     └─ Include locale metadata (Phase 3)
 ```
 
-**Phase 1 limitation:** Locale always defaults to EN (routing not locale-aware yet)
+**Static Param Generation (Phase 2):**
+```typescript
+export async function generateStaticParams() {
+  const params: Array<{ locale: string; slug?: string[] }> = [];
+
+  for (const locale of SUPPORTED_LOCALES) {
+    // Home page
+    params.push({ locale });
+
+    // All docs in this locale
+    for (const doc of getAllDocs(locale)) {
+      params.push({
+        locale,
+        slug: doc.slugAsParams.split("/"),
+      });
+    }
+  }
+
+  return params;  // Generates ~N × M static pages (docs × locales)
+}
+```
 
 ### 4. Component Layer
 
@@ -337,23 +398,23 @@ pnpm build
 
 ## Known Limitations & Constraints
 
-### Phase 1 (Foundation)
+### Phase 2 (Routing)
 
-1. **Routing:** All pages serve EN only (will fix in Phase 2)
-   - URL structure doesn't include locale prefix
-   - Locale param always defaults to "en"
+1. **UI:** No locale picker or switching (Phase 3)
+   - Users can't change language via UI
+   - Must manually edit URL to switch locales
 
-2. **UI:** No locale picker or switching (Phase 3)
-   - Users can't change language
-   - No "in 日本語" indicator
-
-3. **Search:** Indexes all locales together (Phase 3)
+2. **Search:** Indexes all locales together (Phase 3)
    - Can't filter search results by language
-   - Results may include translations
+   - Results may include all locale variants
 
-4. **Navigation:** Not locale-aware (Phase 3)
-   - Sidebar shows all docs regardless of locale
+3. **Navigation:** Not locale-aware (Phase 3)
+   - Sidebar shows all docs regardless of current locale
    - No "missing translation" indicator
+
+4. **SEO:** No multilingual metadata (Phase 4)
+   - No hreflang tags for alternate language versions
+   - No per-locale sitemap.xml
 
 ### By Design
 
@@ -364,11 +425,11 @@ pnpm build
 
 ## Tech Debt & Future Work
 
-### Planned (Phases 2-4)
+### Planned (Phases 3-4)
 
-- [ ] Locale-aware routing (Phase 2)
 - [ ] Language picker UI (Phase 3)
 - [ ] Locale-filtered search (Phase 3)
+- [ ] Sidebar locale-aware filtering (Phase 3)
 - [ ] Multi-language sitemap.xml (Phase 4)
 - [ ] hreflang for SEO (Phase 4)
 - [ ] Sample multilingual content (Phase 4)

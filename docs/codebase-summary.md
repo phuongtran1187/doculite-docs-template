@@ -6,7 +6,7 @@ Doculite is a modern, lightweight documentation template built with Next.js 16 a
 
 ## Current Phase
 
-**Phase 1: i18n Foundation (Complete)** - Multilingual content infrastructure with locale-aware data layer.
+**Phase 2: i18n Routing (Complete)** - Locale-aware routing with next-intl middleware and [locale] route tree.
 
 ## Core Architecture
 
@@ -22,9 +22,23 @@ Doculite is a modern, lightweight documentation template built with Next.js 16 a
 ### Directory Structure
 
 ```
-app/                  → Next.js App Router routes
-  docs/               → Documentation pages and handlers
-  layout.tsx          → Root layout
+app/
+  layout.tsx                           → Root layout (sets HTML lang)
+  [locale]/
+    layout.tsx                         → Locale validation + app chrome
+    page.tsx                           → Landing page (locale-aware)
+    docs/
+      layout.tsx                       → Docs layout
+      [[...slug]]/
+        page.tsx                       → Docs page renderer (static + SSG)
+i18n/
+  routing.ts          (NEW - Phase 2)  → next-intl routing config
+  request.ts          (NEW - Phase 2)  → Locale extraction + message loading
+  navigation.ts       (NEW - Phase 2)  → Link/redirect helpers
+middleware.ts         (NEW - Phase 2)  → Locale detection middleware
+messages/
+  en.json             (NEW - Phase 2)  → English UI translations
+  vi.json             (NEW - Phase 2)  → Vietnamese UI translations
 components/
   docs/               → Layout components (breadcrumbs, pagination, TOC, sidebar)
   mdx/                → Custom MDX components (Callout, Tabs, Steps, Cards, CodeBlock)
@@ -35,8 +49,8 @@ content/
     *.vi.mdx          → Vietnamese locale
     _meta.json        → Sidebar ordering config
 lib/
-  i18n-config.ts      → Locale constants, types, validators (NEW - Phase 1)
-  docs.ts             → Locale-aware doc query functions (Phase 1 update)
+  i18n-config.ts      → Locale constants, types, validators
+  docs.ts             → Locale-aware doc query functions
   site-config.ts      → Site metadata, navigation, social links
   navigation.ts       → Sidebar structure generator
   search.ts           → Content indexing and search
@@ -52,88 +66,183 @@ public/               → Static assets
 - **Dark Mode** — Theme switching via next-themes
 - **Type-Safe** — Full TypeScript with strict mode
 - **Responsive** — Mobile-first layout with sidebar, TOC, mobile nav
-- **Multilingual Foundation** — Locale support with EN fallback (Phase 1)
+- **Locale-Aware Routing** — URL-based routing with next-intl middleware (Phase 2)
 
-## i18n Phase 1 Foundation
+## i18n Phase 2 Routing
 
 ### Overview
 
-Data layer foundation for multilingual content. Velite parses locale from filename suffix (`.vi.mdx`), query functions provide locale-aware filtering with English fallback.
+Locale-aware routing with next-intl middleware. URLs now include locale prefix: `/en/docs/...` (omitted), `/vi/docs/...`. Single `app/[locale]/` route tree handles all locales. Middleware validates locale and redirects invalid URLs.
 
 ### How It Works
 
-**Filename Convention:**
+**Request Flow:**
 ```
-docs/getting-started/installation.mdx    → locale: "en", slugAsParams: "getting-started/installation"
-docs/getting-started/installation.vi.mdx → locale: "vi", slugAsParams: "getting-started/installation"
+User visits: GET /vi/docs/guides/routing
+    ↓
+middleware.ts (next-intl/middleware)
+    ├─ Parse locale from URL: "vi"
+    ├─ Validate against SUPPORTED_LOCALES
+    └─ Set request locale context
+    ↓
+app/[locale]/docs/[[...slug]]/page.tsx
+    ├─ getLocale() → "vi" (from middleware)
+    ├─ Extract slug: "guides/routing"
+    ├─ Call getDocBySlug("guides/routing", "vi")
+    ├─ If fallback needed, show banner
+    └─ Render doc with locale layout
 ```
 
-**Locale Constants** (`lib/i18n-config.ts`):
+**Routing Config** (`i18n/routing.ts`):
 ```typescript
-export const SUPPORTED_LOCALES = ["en", "vi"] as const;
-export type Locale = (typeof SUPPORTED_LOCALES)[number];
-export const DEFAULT_LOCALE: Locale = "en";
-export const LOCALE_LABELS: Record<Locale, string> = {
-  en: "English",
-  vi: "Tiếng Việt",
-};
-export function isValidLocale(s: string): s is Locale { ... }
+defineRouting({
+  locales: SUPPORTED_LOCALES,          // ["en", "vi"]
+  defaultLocale: DEFAULT_LOCALE,       // "en"
+  localePrefix: "as-needed",           // EN: /docs, VI: /vi/docs
+});
 ```
 
-**Data Layer** (`lib/docs.ts`):
+**Middleware** (`middleware.ts`):
 ```typescript
-// Locale-aware queries with EN fallback
-getDocBySlug(slug, locale?)          // Returns { doc, isFallback } | null
-getAllDocs(locale?)                   // Filtered by locale
-getDocsByDirectory(dir, locale?)      // Directory-filtered by locale
-isDocTranslated(slug, locale)        // Check if translation exists
+createMiddleware(routing)
+// Matcher: /((?!api|_next|_vercel|.*\..*).*)
+// Validates locale and redirects invalid URLs
 ```
 
-**Velite Transform** (`velite.config.ts`):
-- Extracts locale from filename suffix
-- Strips locale suffix from `slugAsParams`
-- Adds `locale` field to Doc type
-- Falls back to `DEFAULT_LOCALE` if no suffix found
+**Request Config** (`i18n/request.ts`):
+```typescript
+getRequestConfig(async ({ requestLocale }) => {
+  const requested = await requestLocale;
+  const locale = hasLocale(routing.locales, requested)
+    ? requested
+    : routing.defaultLocale;
+
+  return {
+    locale,
+    messages: (await import(`../messages/${locale}.json`)).default,
+  };
+});
+```
+
+**Static Generation** (`app/[locale]/docs/[[...slug]]/page.tsx`):
+```typescript
+export async function generateStaticParams() {
+  // For each locale:
+  //   For each doc in that locale:
+  //     Generate static path /[locale]/docs/[...slug]
+  // Pre-renders ALL docs × locales at build time
+}
+```
 
 ### Implementation Details
 
-**File Changes:**
-1. **lib/i18n-config.ts** (NEW)
-   - Type-safe locale constants
-   - Locale label mapping (English names)
-   - `isValidLocale()` type guard
+**New Files (Phase 2):**
+1. **i18n/routing.ts** (NEW)
+   - Exports `routing` config from next-intl
+   - Specifies `locales`, `defaultLocale`, `localePrefix: "as-needed"`
 
-2. **velite.config.ts** (MODIFIED)
-   - Import `SUPPORTED_LOCALES, DEFAULT_LOCALE`
-   - Transform extracts locale from filename suffix
-   - Returns `{ locale, slugAsParams }` tuple
+2. **i18n/request.ts** (NEW)
+   - Loads locale from request context
+   - Imports and returns messages for current locale
+   - Falls back to `DEFAULT_LOCALE` if invalid locale requested
 
-3. **lib/docs.ts** (MODIFIED)
-   - All query functions accept optional `locale` param
-   - `getDocBySlug()` returns `{ doc, isFallback }` to signal fallback usage
-   - Fallback strategy: requested locale → EN → null
+3. **i18n/navigation.ts** (NEW)
+   - Exports `Link`, `redirect`, `useRouter`, `usePathname`, `getPathname`
+   - Locale-aware navigation helpers from next-intl
 
-4. **app/docs/[[...slug]]/page.tsx** (MODIFIED)
-   - Handle `getDocBySlug()` return type: `{ doc, isFallback } | null`
-   - Destructure `{ doc }` from result
+4. **middleware.ts** (NEW)
+   - Creates middleware from `createMiddleware(routing)`
+   - Matcher: excludes API, _next, static files
+
+5. **messages/en.json** (NEW)
+   - English UI translation strings
+
+6. **messages/vi.json** (NEW)
+   - Vietnamese UI translation strings
+
+**Modified Files (Phase 2):**
+1. **next.config.ts** (MODIFIED)
+   - Wrapped with `createNextIntlPlugin("./i18n/request.ts")`
+   - Enables next-intl plugin integration
+
+2. **app/layout.tsx** (MODIFIED)
+   - Gets locale via `getLocale()` from next-intl
+   - Sets `<html lang={locale}>`
+
+3. **app/[locale]/layout.tsx** (NEW)
+   - Validates locale parameter
+   - Wraps app chrome (Providers, ThemeProvider, etc.)
+
+4. **app/[locale]/page.tsx** (NEW)
+   - Home page with locale-aware routing
+
+5. **app/[locale]/docs/layout.tsx** (NEW)
+   - Docs layout structure
+
+6. **app/[locale]/docs/[[...slug]]/page.tsx** (NEW)
+   - Replaces old `app/docs/[[...slug]]/page.tsx`
+   - Gets `locale` from route params
+   - Passes `locale` to `getDocBySlug(slug, locale)`
+   - Generates static params for all docs × locales
 
 ### Usage Examples
 
+**In Route Handler (app/[locale]/docs/[[...slug]]/page.tsx):**
 ```typescript
-// Get doc in Vietnamese, fall back to English if not translated
-const result = getDocBySlug("getting-started/installation", "vi");
-if (result?.isFallback) {
-  // Show "not translated" banner
+import { getLocale } from "next-intl/server";
+
+export async function generateStaticParams() {
+  // Build time: pre-generate all docs × locales
+  const allLocales = SUPPORTED_LOCALES;
+  const allDocs = getAllDocs();  // Across all locales
+
+  const params: { locale: string; slug?: string[] }[] = [];
+  for (const locale of allLocales) {
+    params.push({ locale });  // Homepage: /[locale]
+    for (const doc of allDocs.filter(d => d.locale === locale)) {
+      params.push({
+        locale,
+        slug: doc.slugAsParams.split("/"),
+      });
+    }
+  }
+  return params;
 }
 
-// Get all published docs in Vietnamese
-const viDocs = getAllDocs("vi");
+export async function Page({ params }: { params: { locale: string; slug?: string[] } }) {
+  const locale = params.locale as Locale;
+  const slug = (params.slug ?? []).join("/");
 
-// Get docs under "guides/" directory in Vietnamese
-const guides = getDocsByDirectory("guides", "vi");
+  const result = getDocBySlug(slug, locale);
+  if (!result) notFound();
 
-// Check if a specific translation exists
-const isTranslated = isDocTranslated("api/overview", "vi");
+  const { doc, isFallback } = result;
+  // Render doc...
+}
+```
+
+**In Client Component:**
+```typescript
+"use client";
+import { useRouter, getPathname } from "@/i18n/navigation";
+import { useLocale } from "next-intl";
+
+export function LocaleSwitcher() {
+  const router = useRouter();
+  const locale = useLocale();
+  const pathname = getPathname();
+
+  function switchLocale(newLocale: Locale) {
+    router.push(pathname, { locale: newLocale });
+  }
+
+  return (
+    <select value={locale} onChange={e => switchLocale(e.target.value as Locale)}>
+      <option value="en">English</option>
+      <option value="vi">Tiếng Việt</option>
+    </select>
+  );
+}
 ```
 
 ### Supported Locales
@@ -208,9 +317,8 @@ Use `_meta.json` files to control sidebar ordering:
 
 ## Next Phases (Planned)
 
-- **Phase 2** — Routing: Add next-intl, `[locale]` route pattern, middleware
-- **Phase 3** — UI Updates: Locale picker, navigation sync, search filtering
-- **Phase 4** — Polish: SEO metadata, sample multilingual content
+- **Phase 3** — UI Updates: Locale picker dropdown, navigation sync, search filtering
+- **Phase 4** — Polish: SEO metadata (hreflang, sitemap), sample multilingual content
 
 ## Build Output
 
@@ -219,11 +327,11 @@ Velite generates:
 - `.velite/index.js` — Runtime doc data export
 - Content indexed by slug, with `locale` and `slugAsParams` fields
 
-## Known Limitations (Phase 1)
+## Known Limitations (Phase 2)
 
-These are intentional for data-layer-only foundation, addressed in later phases:
+Addressed in Phase 3 and later:
 
-- Routing still EN-only (Phase 2)
 - No locale picker UI (Phase 3)
 - Search doesn't filter by locale (Phase 3)
 - Navigation not locale-aware (Phase 3)
+- No SEO metadata: hreflang, sitemap per locale (Phase 4)
