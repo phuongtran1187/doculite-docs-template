@@ -20,22 +20,34 @@ function collectIds(entries: TocEntry[]): string[] {
   return ids;
 }
 
+// Flatten nested TOC tree into a flat list with depth info
+function flattenToc(entries: TocEntry[], depth = 0): { entry: TocEntry; depth: number }[] {
+  const result: { entry: TocEntry; depth: number }[] = [];
+  for (const entry of entries) {
+    result.push({ entry, depth });
+    if (entry.items.length > 0) {
+      result.push(...flattenToc(entry.items, depth + 1));
+    }
+  }
+  return result;
+}
+
 function TocItems({
   entries,
   activeId,
-  depth,
 }: {
   entries: TocEntry[];
   activeId: string;
-  depth: number;
 }) {
+  const flat = useMemo(() => flattenToc(entries), [entries]);
+
   return (
-    <ul className={cn("flex flex-col gap-2", depth > 0 && "ml-4")}>
-      {entries.map((entry) => {
+    <ul className="flex flex-col gap-2">
+      {flat.map(({ entry, depth }) => {
         const id = entry.url.replace("#", "");
         const isActive = activeId === id;
         return (
-          <li key={entry.url}>
+          <li key={entry.url} style={{ paddingLeft: depth * 16 }}>
             <a
               href={entry.url}
               className={cn(
@@ -45,9 +57,6 @@ function TocItems({
             >
               {entry.title}
             </a>
-            {entry.items.length > 0 && (
-              <TocItems entries={entry.items} activeId={activeId} depth={depth + 1} />
-            )}
           </li>
         );
       })}
@@ -64,7 +73,7 @@ export function Toc({ toc }: { toc: TocEntry[] }) {
   return (
     <div className="sticky top-16 -mt-10 max-h-[calc(100vh-6rem)] overflow-y-auto pt-10">
       <p className="mb-2 font-medium">On This Page</p>
-      <TocItems entries={toc} activeId={activeId} depth={0} />
+      <TocItems entries={toc} activeId={activeId} />
     </div>
   );
 }

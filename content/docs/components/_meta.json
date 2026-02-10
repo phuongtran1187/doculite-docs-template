@@ -1,0 +1,8 @@
+{
+  "callout": { "title": "Callout", "order": 1 },
+  "tabs": { "title": "Tabs", "order": 2 },
+  "steps": { "title": "Steps", "order": 3 },
+  "cards": { "title": "Cards", "order": 4 },
+  "code-blocks": { "title": "Code Blocks", "order": 5 },
+  "file-tree": { "title": "File Tree", "order": 6 }
+}

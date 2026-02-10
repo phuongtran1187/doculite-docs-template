@@ -1,0 +1,58 @@
+---
+title: Project Structure
+description: Overview of the Doculite project file structure.
+order: 2
+---
+
+## Directory Layout
+
+<FileTree>
+  <Folder name="content">
+    <Folder name="docs">
+      <File name="_meta.json" />
+      <File name="index.mdx" />
+      <Folder name="getting-started">
+        <File name="_meta.json" />
+        <File name="installation.mdx" />
+      </Folder>
+    </Folder>
+  </Folder>
+  <Folder name="app">
+    <File name="layout.tsx" />
+    <File name="page.tsx" />
+    <Folder name="docs">
+      <File name="layout.tsx" />
+      <Folder name="[[...slug]]">
+        <File name="page.tsx" />
+      </Folder>
+    </Folder>
+  </Folder>
+  <Folder name="components">
+    <Folder name="docs" />
+    <Folder name="mdx" />
+    <Folder name="ui" />
+  </Folder>
+  <Folder name="lib" />
+  <File name="velite.config.ts" />
+  <File name="next.config.ts" />
+  <File name="package.json" />
+</FileTree>
+
+## Key Directories
+
+| Directory | Purpose |
+|-----------|---------|
+| `content/docs/` | MDX documentation files |
+| `app/docs/` | Next.js route handlers for docs |
+| `components/docs/` | Documentation layout components |
+| `components/mdx/` | Custom MDX components |
+| `components/ui/` | shadcn/ui primitives |
+| `lib/` | Utility functions and configuration |
+
+## Content Directory
+
+All documentation content lives in `content/docs/`. Each `.mdx` file becomes a page. Directories create navigation groups controlled by `_meta.json` files.
+
+<Callout type="info">
+  Velite processes the `content/` directory at build time and generates typed data in `.velite/`.
+</Callout>

@@ -4,25 +4,53 @@ description: A modern documentation template built with Next.js and shadcn/ui.
 order: 0
 ---
 
-# Welcome to Doculite
-
-A lightweight, forkable documentation starter template.
+A lightweight, forkable documentation starter built with Next.js, MDX, and shadcn/ui.
 
 ## Features
 
-- **MDX Content** — Write docs in MDX with full component support
-- **Syntax Highlighting** — Powered by Shiki with dual theme support
-- **Search** — Fast client-side search across all docs
-- **Dark Mode** — Automatic theme switching with next-themes
+<CardGroup cols={3}>
+  <Card title="MDX Content" href="/docs/writing-content/mdx-basics">
+    Write documentation in MDX with full React component support.
+  </Card>
+  <Card title="Syntax Highlighting" href="/docs/components/code-blocks">
+    Beautiful code blocks powered by Shiki with dual theme support.
+  </Card>
+  <Card title="Search" href="/docs/getting-started/installation">
+    Fast client-side search across all documentation pages.
+  </Card>
+  <Card title="Components" href="/docs/components/callout">
+    Rich MDX components like Callout, Tabs, Steps, and more.
+  </Card>
+  <Card title="Dark Mode" href="/docs/getting-started/configuration">
+    Automatic theme switching with next-themes.
+  </Card>
+  <Card title="Easy Config" href="/docs/getting-started/configuration">
+    Single config file for site name, navigation, and more.
+  </Card>
+</CardGroup>
 
 ## Quick Start
 
-```bash
-pnpm create next-app --example doculite-docs-template my-docs
-```
-
-Then start the dev server:
-
-```bash
-pnpm dev
-```
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">
+    ```bash
+    pnpm create next-app --example doculite-docs-template my-docs
+    cd my-docs
+    pnpm dev
+    ```
+  </Tab>
+  <Tab value="npm">
+    ```bash
+    npx create-next-app --example doculite-docs-template my-docs
+    cd my-docs
+    npm run dev
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    yarn create next-app --example doculite-docs-template my-docs
+    cd my-docs
+    yarn dev
+    ```
+  </Tab>
+</Tabs>

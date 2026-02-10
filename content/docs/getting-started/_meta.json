@@ -1,4 +1,5 @@
 {
   "installation": { "title": "Installation", "order": 1 },
-  "configuration": { "title": "Configuration", "order": 2 }
+  "project-structure": { "title": "Project Structure", "order": 2 },
+  "configuration": { "title": "Configuration", "order": 3 }
 }

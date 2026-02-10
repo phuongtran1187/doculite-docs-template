@@ -1,0 +1,77 @@
+---
+title: Callout
+description: Highlight important information with styled callout boxes.
+order: 1
+---
+
+Callouts draw attention to important information. Use them for tips, warnings, and notes.
+
+## Variants
+
+### Info
+
+<Callout type="info" title="Information">
+  This is an informational callout for general notes.
+</Callout>
+
+```mdx
+<Callout type="info" title="Information">
+  This is an informational callout for general notes.
+</Callout>
+```
+
+### Warning
+
+<Callout type="warning" title="Warning">
+  This callout warns about potential issues.
+</Callout>
+
+```mdx
+<Callout type="warning" title="Warning">
+  This callout warns about potential issues.
+</Callout>
+```
+
+### Danger
+
+<Callout type="danger" title="Danger">
+  This callout highlights critical issues or breaking changes.
+</Callout>
+
+```mdx
+<Callout type="danger" title="Danger">
+  This callout highlights critical issues or breaking changes.
+</Callout>
+```
+
+### Tip
+
+<Callout type="tip" title="Tip">
+  This callout shares helpful tips and best practices.
+</Callout>
+
+```mdx
+<Callout type="tip" title="Tip">
+  This callout shares helpful tips and best practices.
+</Callout>
+```
+
+## Without Title
+
+<Callout type="info">
+  Callouts work without a title too.
+</Callout>
+
+```mdx
+<Callout type="info">
+  Callouts work without a title too.
+</Callout>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `type` | `"info" \| "warning" \| "danger" \| "tip"` | `"info"` | Callout variant |
+| `title` | `string` | — | Optional title text |
+| `children` | `ReactNode` | required | Callout content |

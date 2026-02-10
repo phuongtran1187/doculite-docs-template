@@ -1,0 +1,5 @@
+{
+  "mdx-basics": { "title": "MDX Basics", "order": 1 },
+  "frontmatter": { "title": "Frontmatter", "order": 2 },
+  "organizing-pages": { "title": "Organizing Pages", "order": 3 }
+}

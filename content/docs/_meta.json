@@ -1,4 +1,5 @@
 {
   "getting-started": { "title": "Getting Started", "order": 1 },
-  "components": { "title": "Components", "order": 2 }
+  "writing-content": { "title": "Writing Content", "order": 2 },
+  "components": { "title": "Components", "order": 3 }
 }

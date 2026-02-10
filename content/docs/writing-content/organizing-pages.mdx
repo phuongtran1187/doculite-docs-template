@@ -1,0 +1,95 @@
+---
+title: Organizing Pages
+description: How to structure pages and control sidebar navigation.
+order: 3
+---
+
+## Directory Structure
+
+Documentation pages are organized by directories. Each directory becomes a group in the sidebar navigation.
+
+```
+content/docs/
+├── index.mdx              → /docs
+├── _meta.json
+├── getting-started/
+│   ├── _meta.json
+│   ├── installation.mdx   → /docs/getting-started/installation
+│   └── configuration.mdx  → /docs/getting-started/configuration
+└── guides/
+    ├── _meta.json
+    └── deployment.mdx      → /docs/guides/deployment
+```
+
+## _meta.json Files
+
+Each directory uses a `_meta.json` file to control its sidebar title and page ordering.
+
+### Root _meta.json
+
+Controls the order and titles of directory groups:
+
+```json
+{
+  "getting-started": { "title": "Getting Started", "order": 1 },
+  "guides": { "title": "Guides", "order": 2 }
+}
+```
+
+### Directory _meta.json
+
+Controls the order and titles of pages within a group:
+
+```json
+{
+  "installation": { "title": "Installation", "order": 1 },
+  "configuration": { "title": "Configuration", "order": 2 }
+}
+```
+
+<Callout type="info">
+  If no `_meta.json` exists, pages are sorted by their frontmatter `order` field, and directory names are converted from kebab-case to Title Case.
+</Callout>
+
+## Adding a New Section
+
+<Steps>
+
+### Create a directory
+
+Create a new directory under `content/docs/`:
+
+```bash
+mkdir content/docs/guides
+```
+
+### Add _meta.json
+
+Create `content/docs/guides/_meta.json`:
+
+```json
+{
+  "deployment": { "title": "Deployment", "order": 1 }
+}
+```
+
+### Register in root _meta.json
+
+Add the directory to `content/docs/_meta.json`:
+
+```json
+{
+  "getting-started": { "title": "Getting Started", "order": 1 },
+  "guides": { "title": "Guides", "order": 2 }
+}
+```
+
+### Create pages
+
+Add MDX files to the directory:
+
+```bash
+touch content/docs/guides/deployment.mdx
+```
+
+</Steps>

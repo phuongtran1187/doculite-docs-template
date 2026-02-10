@@ -6,6 +6,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+// BreadcrumbLink kept for "Docs" root link
 import { Fragment } from "react";
 
 function formatTitle(slug: string): string {
@@ -28,7 +29,6 @@ export function DocBreadcrumbs({ slug }: { slug: string }) {
         </BreadcrumbItem>
         {segments.map((segment, i) => {
           const isLast = i === segments.length - 1;
-          const href = `/docs/${segments.slice(0, i + 1).join("/")}`;
 
           return (
             <Fragment key={segment}>
@@ -37,9 +37,9 @@ export function DocBreadcrumbs({ slug }: { slug: string }) {
                 {isLast ? (
                   <BreadcrumbPage>{formatTitle(segment)}</BreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink href={href}>
+                  <span className="text-muted-foreground">
                     {formatTitle(segment)}
-                  </BreadcrumbLink>
+                  </span>
                 )}
               </BreadcrumbItem>
             </Fragment>

@@ -5,6 +5,7 @@ import { MdxContent } from "@/components/docs/mdx-content";
 import { Toc } from "@/components/docs/toc";
 import { DocBreadcrumbs } from "@/components/docs/breadcrumbs";
 import { DocPagination } from "@/components/docs/pagination";
+import { siteConfig } from "@/lib/site-config";
 
 interface DocPageProps {
   params: Promise<{ slug?: string[] }>;
@@ -55,6 +56,18 @@ export default async function DocPage({ params }: DocPageProps) {
         <div className="mdx mt-8">
           <MdxContent code={doc.body} />
         </div>
+        {siteConfig.github?.editUrl && (
+          <div className="mt-8">
+            <a
+              href={`${siteConfig.github.editUrl}/docs/${slugPath || "index"}.mdx`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+            >
+              Edit this page on GitHub
+            </a>
+          </div>
+        )}
         <DocPagination slug={slugPath} />
       </div>
       <div className="hidden text-sm xl:block">

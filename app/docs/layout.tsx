@@ -11,7 +11,7 @@ export default function DocsLayout({
 
   return (
     <div className="container mx-auto flex-1 items-start px-4 md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 md:px-8 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
-      <aside className="fixed top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:sticky md:block">
+      <aside aria-label="Documentation sidebar" className="fixed top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:sticky md:block">
         <Sidebar />
       </aside>
       <div className="fixed top-14 z-30 flex h-12 items-center md:hidden">

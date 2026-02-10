@@ -4,19 +4,52 @@ description: How to install and set up Doculite.
 order: 1
 ---
 
-# Installation
-
-Get started with Doculite in a few steps.
-
 ## Prerequisites
 
-- Node.js 18+
-- pnpm 8+
+- Node.js 18 or later
+- pnpm 8+ (recommended), npm, or yarn
 
-## Quick Start
+## Create a New Project
+
+<Steps>
+
+### Clone the template
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">
+    ```bash
+    pnpm create next-app --example doculite-docs-template my-docs
+    ```
+  </Tab>
+  <Tab value="npm">
+    ```bash
+    npx create-next-app --example doculite-docs-template my-docs
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    yarn create next-app --example doculite-docs-template my-docs
+    ```
+  </Tab>
+</Tabs>
+
+### Install dependencies
 
 ```bash
-pnpm create next-app --example doculite-docs-template my-docs
 cd my-docs
+pnpm install
+```
+
+### Start the development server
+
+```bash
 pnpm dev
 ```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+</Steps>
+
+<Callout type="tip" title="Hot Reload">
+  The development server supports hot reload. Changes to MDX files and components are reflected immediately.
+</Callout>

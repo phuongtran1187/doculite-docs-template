@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Doculite
 
-## Getting Started
+A modern, lightweight documentation template built with Next.js 15 and shadcn/ui.
 
-First, run the development server:
+## Features
+
+- **MDX Content** — Write docs with full React component support
+- **Syntax Highlighting** — Shiki-powered with automatic light/dark themes
+- **Command Palette Search** — Cmd+K / Ctrl+K instant search
+- **Dark Mode** — Theme switching with next-themes
+- **Rich Components** — Callout, Tabs, Steps, Cards, CodeBlock, FileTree
+- **Responsive** — Mobile-first with sidebar, TOC, and mobile navigation
+- **Type-Safe** — Full TypeScript with strict mode
+
+## Quick Start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm create next-app --example doculite-docs-template my-docs
+cd my-docs
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000/docs](http://localhost:3000/docs)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Customization
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Site Configuration
 
-## Learn More
+Edit `lib/site-config.ts` to change the site name, navigation links, social links, and footer.
 
-To learn more about Next.js, take a look at the following resources:
+### Content
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Add MDX files to `content/docs/`. Use `_meta.json` files in each directory to control sidebar ordering.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Components
 
-## Deploy on Vercel
+Custom MDX components live in `components/mdx/`. They're registered in `mdx-components.tsx`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tech Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Next.js 15](https://nextjs.org) — App Router, SSG
+- [Velite](https://velite.js.org) — Content layer for MDX
+- [shadcn/ui](https://ui.shadcn.com) — UI components
+- [Tailwind CSS v4](https://tailwindcss.com) — Styling
+- [Shiki](https://shiki.style) — Syntax highlighting
+- [cmdk](https://cmdk.paco.me) — Command palette
+
+## Project Structure
+
+```
+content/docs/    → MDX documentation files
+app/docs/        → Next.js route handlers
+components/docs/ → Documentation layout components
+components/mdx/  → Custom MDX components
+components/ui/   → shadcn/ui primitives
+lib/             → Utilities and configuration
+```
+
+## Scripts
+
+```bash
+pnpm dev          # Start development server
+pnpm build        # Production build
+pnpm start        # Start production server
+pnpm lint         # Run ESLint
+pnpm type-check   # TypeScript type checking
+```
+
+## License
+
+MIT

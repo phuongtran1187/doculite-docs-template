@@ -1,0 +1,45 @@
+---
+title: Frontmatter
+description: Reference for MDX frontmatter fields.
+order: 2
+---
+
+Every MDX file starts with a YAML frontmatter block between `---` delimiters.
+
+## Required Fields
+
+```yaml
+---
+title: Page Title
+---
+```
+
+The `title` field is the only required field. It appears in the page header, sidebar, search results, and browser tab.
+
+## Optional Fields
+
+```yaml
+---
+title: Page Title
+description: A brief description of this page.
+order: 1
+published: true
+---
+```
+
+## Field Reference
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `title` | `string` | required | Page title (max 120 characters) |
+| `description` | `string` | — | Description for SEO and search (max 300 characters) |
+| `order` | `number` | `999` | Sort order within its directory |
+| `published` | `boolean` | `true` | Set to `false` to hide from production |
+
+<Callout type="tip" title="Ordering">
+  Pages are sorted by `order` value. Use increments of 1 (1, 2, 3...) for easy reordering later.
+</Callout>
+
+<Callout type="warning">
+  Unpublished pages (`published: false`) are excluded from the sidebar, search, and pagination. They still render if accessed directly during development.
+</Callout>

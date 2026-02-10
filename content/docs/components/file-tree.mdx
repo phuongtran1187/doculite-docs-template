@@ -1,0 +1,65 @@
+---
+title: File Tree
+description: Display directory structures as visual trees.
+order: 6
+---
+
+The FileTree component displays file and directory structures. Useful for showing project layouts and content organization.
+
+## Basic Usage
+
+<FileTree>
+  <Folder name="src">
+    <File name="index.ts" />
+    <File name="utils.ts" />
+  </Folder>
+  <File name="package.json" />
+</FileTree>
+
+```mdx
+<FileTree>
+  <Folder name="src">
+    <File name="index.ts" />
+    <File name="utils.ts" />
+  </Folder>
+  <File name="package.json" />
+</FileTree>
+```
+
+## Nested Structure
+
+<FileTree>
+  <Folder name="app">
+    <File name="layout.tsx" />
+    <File name="page.tsx" />
+    <Folder name="docs">
+      <File name="layout.tsx" />
+      <Folder name="[[...slug]]">
+        <File name="page.tsx" />
+      </Folder>
+    </Folder>
+    <Folder name="api">
+      <Folder name="health">
+        <File name="route.ts" />
+      </Folder>
+    </Folder>
+  </Folder>
+</FileTree>
+
+## Props
+
+### FileTree
+
+Wrapper component. Accepts children of `Folder` and `File` components.
+
+### Folder
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `name` | `string` | Directory name |
+
+### File
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `name` | `string` | File name |

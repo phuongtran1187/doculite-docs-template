@@ -1,0 +1,60 @@
+---
+title: Cards
+description: Display linked cards in grid layouts.
+order: 4
+---
+
+Cards present navigation links or feature highlights in a visual grid. Use `CardGroup` to arrange multiple cards.
+
+## Card Group
+
+<CardGroup>
+  <Card title="Getting Started" href="/docs/getting-started/installation">
+    Learn how to install and set up Doculite.
+  </Card>
+  <Card title="Writing Content" href="/docs/writing-content/mdx-basics">
+    Write documentation with MDX.
+  </Card>
+</CardGroup>
+
+```mdx
+<CardGroup>
+  <Card title="Getting Started" href="/docs/getting-started/installation">
+    Learn how to install and set up Doculite.
+  </Card>
+  <Card title="Writing Content" href="/docs/writing-content/mdx-basics">
+    Write documentation with MDX.
+  </Card>
+</CardGroup>
+```
+
+## Three Columns
+
+<CardGroup cols={3}>
+  <Card title="Callout">Highlight important information.</Card>
+  <Card title="Tabs">Organize content into panels.</Card>
+  <Card title="Steps">Numbered step-by-step guides.</Card>
+</CardGroup>
+
+```mdx
+<CardGroup cols={3}>
+  <Card title="Callout">Highlight important information.</Card>
+  <Card title="Tabs">Organize content into panels.</Card>
+  <Card title="Steps">Numbered step-by-step guides.</Card>
+</CardGroup>
+```
+
+## Props
+
+### CardGroup
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `cols` | `2 \| 3` | `2` | Number of columns |
+
+### Card
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `title` | `string` | Card heading |
+| `href` | `string?` | Optional link URL |

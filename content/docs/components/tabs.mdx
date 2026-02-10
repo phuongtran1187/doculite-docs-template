@@ -1,0 +1,74 @@
+---
+title: Tabs
+description: Organize content into switchable tab panels.
+order: 2
+---
+
+Tabs let you present multiple versions of content in a compact layout. Useful for showing code in different languages or package managers.
+
+## Basic Usage
+
+<Tabs items={["React", "Vue", "Svelte"]}>
+  <Tab value="React">
+    ```tsx
+    function App() {
+      return <h1>Hello React</h1>;
+    }
+    ```
+  </Tab>
+  <Tab value="Vue">
+    ```vue
+    <template>
+      <h1>Hello Vue</h1>
+    </template>
+    ```
+  </Tab>
+  <Tab value="Svelte">
+    ```svelte
+    <h1>Hello Svelte</h1>
+    ```
+  </Tab>
+</Tabs>
+
+```mdx
+<Tabs items={["React", "Vue", "Svelte"]}>
+  <Tab value="React">React content here</Tab>
+  <Tab value="Vue">Vue content here</Tab>
+  <Tab value="Svelte">Svelte content here</Tab>
+</Tabs>
+```
+
+## Package Manager Tabs
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">
+    ```bash
+    pnpm add next react react-dom
+    ```
+  </Tab>
+  <Tab value="npm">
+    ```bash
+    npm install next react react-dom
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    yarn add next react react-dom
+    ```
+  </Tab>
+</Tabs>
+
+## Props
+
+### Tabs
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `items` | `string[]` | required | Tab labels |
+| `defaultValue` | `string` | First item | Initially active tab |
+
+### Tab
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `value` | `string` | Must match an item in `items` |

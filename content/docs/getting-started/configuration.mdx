@@ -1,17 +1,63 @@
 ---
 title: Configuration
 description: Configure your Doculite documentation site.
-order: 2
+order: 3
 ---
 
-# Configuration
+## Site Configuration
 
-Customize your documentation site through the site config.
+Edit `lib/site-config.ts` to customize your documentation site:
 
-## Site Config
+```ts
+import type { DoculiteConfig } from "@/lib/config-types";
 
-Edit `lib/site-config.ts` to change the site name, description, and navigation links.
+export const siteConfig: DoculiteConfig = {
+  name: "My Docs",
+  description: "Documentation for my project.",
+  url: "https://docs.example.com",
+  navLinks: [
+    { title: "Docs", href: "/docs" },
+    { title: "GitHub", href: "https://github.com/...", external: true },
+  ],
+  socialLinks: [
+    { platform: "github", url: "https://github.com/..." },
+  ],
+  footer: {
+    text: "Built with Doculite.",
+  },
+  github: {
+    repo: "owner/repo",
+    editUrl: "https://github.com/owner/repo/edit/main/content",
+  },
+};
+```
 
-## Content Structure
+## Configuration Fields
 
-Place your MDX files in `content/docs/`. Use `_meta.json` files to control sidebar ordering.
+| Field | Type | Description |
+|-------|------|-------------|
+| `name` | `string` | Site name shown in header and metadata |
+| `description` | `string` | Site description for SEO |
+| `url` | `string?` | Production URL |
+| `navLinks` | `NavLink[]` | Header navigation links |
+| `socialLinks` | `SocialLink[]?` | Social media links (GitHub, Twitter, Discord) |
+| `footer.text` | `string?` | Footer text |
+| `github.repo` | `string?` | GitHub repository (owner/repo) |
+| `github.editUrl` | `string?` | Base URL for "Edit this page" links |
+
+<Callout type="warning" title="Restart Required">
+  Configuration changes require restarting the development server since the config is imported at build time.
+</Callout>
+
+## Content Configuration
+
+### Velite Schema
+
+Content schema is defined in `velite.config.ts`. Each MDX file supports these frontmatter fields:
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `title` | `string` | required | Page title |
+| `description` | `string?` | — | Page description for SEO and search |
+| `order` | `number` | `999` | Sort order in sidebar |
+| `published` | `boolean` | `true` | Whether page appears in production |

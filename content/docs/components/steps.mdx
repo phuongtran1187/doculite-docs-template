@@ -1,0 +1,47 @@
+---
+title: Steps
+description: Display numbered step-by-step instructions.
+order: 3
+---
+
+Steps provide a numbered guide with a vertical connector line. Use `h3` headings inside the `Steps` component for each step.
+
+## Usage
+
+<Steps>
+
+### Create a new file
+
+Add an MDX file to your content directory.
+
+### Add frontmatter
+
+Include title and description in the frontmatter block.
+
+### Write content
+
+Add your documentation content using Markdown and components.
+
+</Steps>
+
+~~~mdx
+<Steps>
+
+### Create a new file
+
+Add an MDX file to your content directory.
+
+### Add frontmatter
+
+Include title and description in the frontmatter block.
+
+### Write content
+
+Add your documentation content using Markdown and components.
+
+</Steps>
+~~~
+
+<Callout type="info">
+  Each `h3` heading inside Steps automatically gets a numbered counter. The counter resets for each Steps block.
+</Callout>
