@@ -4,7 +4,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    Doculite Documentation (Phase 2)             │
+│             Doculite Documentation (i18n Complete)              │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  ┌──────────┐  GET /vi/docs/guides/routing                     │
@@ -200,7 +200,7 @@ GET /vi/docs/guides/routing (via middleware)
   │
   └─ In generateMetadata():
      ├─ Use doc.title, doc.description for <head> tags
-     └─ Include locale metadata (Phase 3)
+     └─ Include hreflang alternates for SEO (Phase 4)
 ```
 
 **Static Param Generation (Phase 2):**
@@ -229,10 +229,12 @@ export async function generateStaticParams() {
 
 **Layout Components** (`components/docs/`):
 - **breadcrumbs** — Shows path: Docs > Guides > Routing
-- **sidebar** — Navigation tree from `_meta.json`
+- **sidebar** — Navigation tree from `_meta.json` (locale-aware via buildNavTree)
 - **toc** — Table of contents from doc headings
 - **pagination** — Previous/next doc links
 - **mdx-content** — Renders compiled MDX
+- **language-switcher** — Globe icon dropdown for locale selection (Phase 3)
+- **fallback-banner** — "Not translated" warning when isFallback=true (Phase 3)
 
 **MDX Components** (`components/mdx/`):
 - Users can insert custom components in MDX:
@@ -260,7 +262,7 @@ export type Locale = (typeof SUPPORTED_LOCALES)[number];
 // Default fallback locale
 export const DEFAULT_LOCALE: Locale = "en";
 
-// UI labels for locale picker (Phase 3)
+// UI labels for locale picker (used in LanguageSwitcher)
 export const LOCALE_LABELS: Record<Locale, string> = {
   en: "English",
   vi: "Tiếng Việt",
@@ -377,7 +379,7 @@ pnpm build
 
 - **HTML:** ~20KB per page (minified)
 - **JS:** ~200-400KB (Next.js framework + components)
-  - Can be reduced by lazy-loading search (Phase 3)
+  - Search lazy-loaded via cmdk
 - **CSS:** ~50-100KB (Tailwind pruned)
 
 ## Scalability Limits
@@ -396,25 +398,47 @@ pnpm build
 - Add image optimization (sharp)
 - Split large doc collections by category
 
+## i18n Architecture (Phases 3-4)
+
+### Phase 3: Components & UI (COMPLETE)
+
+1. **LanguageSwitcher Component**
+   - Globe icon dropdown in header
+   - Shows current locale with label
+   - Uses `router.replace(pathname, { locale })` to switch
+   - Client component using `@/i18n/navigation`
+
+2. **FallbackBanner Component**
+   - Shown when `isFallback === true` from getDocBySlug
+   - Uses `useTranslations()` for localized message
+   - Link to view original EN doc
+
+3. **Locale-Aware Navigation**
+   - `buildNavTree(locale)` filters by locale + merges EN fallbacks
+   - All client components use Link/usePathname/useRouter from `@/i18n/navigation`
+   - Sidebar hrefs WITHOUT locale prefix (next-intl Link auto-adds)
+
+4. **Locale-Filtered Search**
+   - `getSearchIndex(locale)` filters docs by locale
+   - Search results match current language only
+   - Uses `@/i18n/navigation` Link for results
+
+### Phase 4: SEO & Polish (COMPLETE)
+
+1. **hreflang Alternates**
+   - `generateMetadata()` includes `alternates.languages`
+   - `getAvailableLocales(slug)` returns locales with translations
+   - x-default points to EN canonical version
+
+2. **Locale-Aware Edit Links**
+   - Edit links append `.{locale}.mdx` suffix (e.g., `.vi.mdx`)
+   - Falls back to `.mdx` if locale=en
+
+3. **Sample Vietnamese Content**
+   - Example VI translations of key docs included
+   - Demonstrates fallback behavior
+
 ## Known Limitations & Constraints
-
-### Phase 2 (Routing)
-
-1. **UI:** No locale picker or switching (Phase 3)
-   - Users can't change language via UI
-   - Must manually edit URL to switch locales
-
-2. **Search:** Indexes all locales together (Phase 3)
-   - Can't filter search results by language
-   - Results may include all locale variants
-
-3. **Navigation:** Not locale-aware (Phase 3)
-   - Sidebar shows all docs regardless of current locale
-   - No "missing translation" indicator
-
-4. **SEO:** No multilingual metadata (Phase 4)
-   - No hreflang tags for alternate language versions
-   - No per-locale sitemap.xml
 
 ### By Design
 
@@ -425,16 +449,15 @@ pnpm build
 
 ## Tech Debt & Future Work
 
-### Planned (Phases 3-4)
+### Completed
 
-- [ ] Language picker UI (Phase 3)
-- [ ] Locale-filtered search (Phase 3)
-- [ ] Sidebar locale-aware filtering (Phase 3)
-- [ ] Multi-language sitemap.xml (Phase 4)
-- [ ] hreflang for SEO (Phase 4)
-- [ ] Sample multilingual content (Phase 4)
+- ✓ Language picker UI (Phase 3)
+- ✓ Locale-filtered search (Phase 3)
+- ✓ Sidebar locale-aware filtering (Phase 3)
+- ✓ hreflang for SEO (Phase 4)
+- ✓ Sample multilingual content (Phase 4)
 
-### Optional
+### Future Enhancements
 
 - Image optimization (sharp)
 - CDN caching headers

@@ -4,9 +4,9 @@
 
 Doculite is a modern, lightweight documentation template built with Next.js 16 and shadcn/ui. It provides a complete documentation site with MDX support, syntax highlighting, search, dark mode, and multiple responsive components.
 
-## Current Phase
+## Current Status
 
-**Phase 2: i18n Routing (Complete)** - Locale-aware routing with next-intl middleware and [locale] route tree.
+**All i18n Phases Complete** - Full multilingual support with routing, UI components, and SEO.
 
 ## Core Architecture
 
@@ -40,9 +40,9 @@ messages/
   en.json             (NEW - Phase 2)  → English UI translations
   vi.json             (NEW - Phase 2)  → Vietnamese UI translations
 components/
-  docs/               → Layout components (breadcrumbs, pagination, TOC, sidebar)
+  docs/               → Layout components (breadcrumbs, pagination, TOC, sidebar, language-switcher, fallback-banner)
   mdx/                → Custom MDX components (Callout, Tabs, Steps, Cards, CodeBlock)
-  ui/                 → shadcn/ui primitives
+  ui/                 → shadcn/ui primitives (includes dropdown-menu)
 content/
   docs/               → MDX documentation files
     *.mdx             → Default locale (EN)
@@ -50,10 +50,10 @@ content/
     _meta.json        → Sidebar ordering config
 lib/
   i18n-config.ts      → Locale constants, types, validators
-  docs.ts             → Locale-aware doc query functions
+  docs.ts             → Locale-aware doc query functions (includes getAvailableLocales)
   site-config.ts      → Site metadata, navigation, social links
-  navigation.ts       → Sidebar structure generator
-  search.ts           → Content indexing and search
+  navigation.ts       → Sidebar structure generator (buildNavTree with locale)
+  search.ts           → Content indexing and search (getSearchIndex with locale)
 public/               → Static assets
 .velite/              → Generated type definitions and content index
 ```
@@ -66,7 +66,7 @@ public/               → Static assets
 - **Dark Mode** — Theme switching via next-themes
 - **Type-Safe** — Full TypeScript with strict mode
 - **Responsive** — Mobile-first layout with sidebar, TOC, mobile nav
-- **Locale-Aware Routing** — URL-based routing with next-intl middleware (Phase 2)
+- **Full i18n Support** — URL routing, language switcher, locale-filtered search, hreflang SEO
 
 ## i18n Phase 2 Routing
 
@@ -315,10 +315,12 @@ Use `_meta.json` files to control sidebar ordering:
 - **Styling** → Tailwind CSS v4 theme (globals.css)
 - **Search** → `lib/search.ts` (indexing strategy)
 
-## Next Phases (Planned)
+## Completed Phases
 
-- **Phase 3** — UI Updates: Locale picker dropdown, navigation sync, search filtering
-- **Phase 4** — Polish: SEO metadata (hreflang, sitemap), sample multilingual content
+- **Phase 1** — Velite locale extraction, data layer with fallback
+- **Phase 2** — next-intl routing with [locale] route tree
+- **Phase 3** — UI components: LanguageSwitcher, FallbackBanner, locale-filtered search, locale-aware nav
+- **Phase 4** — SEO: hreflang alternates, locale-aware edit links, sample Vietnamese content
 
 ## Build Output
 
@@ -327,11 +329,15 @@ Velite generates:
 - `.velite/index.js` — Runtime doc data export
 - Content indexed by slug, with `locale` and `slugAsParams` fields
 
-## Known Limitations (Phase 2)
+## i18n Features (Complete)
 
-Addressed in Phase 3 and later:
+All limitations resolved:
 
-- No locale picker UI (Phase 3)
-- Search doesn't filter by locale (Phase 3)
-- Navigation not locale-aware (Phase 3)
-- No SEO metadata: hreflang, sitemap per locale (Phase 4)
+- ✓ LanguageSwitcher dropdown in header (Phase 3)
+- ✓ Search filtered by current locale via getSearchIndex(locale) (Phase 3)
+- ✓ Navigation locale-aware via buildNavTree(locale) with EN fallback merge (Phase 3)
+- ✓ FallbackBanner for untranslated docs (Phase 3)
+- ✓ All client components use @/i18n/navigation (Link, usePathname, useRouter) (Phase 3)
+- ✓ hreflang alternates in generateMetadata (Phase 4)
+- ✓ Locale-aware edit links with .{locale}.mdx suffix (Phase 4)
+- ✓ Sample Vietnamese translations included (Phase 4)

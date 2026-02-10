@@ -1,5 +1,0 @@
-{
-  "installation": { "title": "Cài đặt", "order": 1 },
-  "project-structure": { "title": "Cấu trúc dự án", "order": 2 },
-  "configuration": { "title": "Cấu hình", "order": 3 }
-}
