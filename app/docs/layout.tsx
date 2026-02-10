@@ -17,8 +17,8 @@ export default function DocsLayout({
       <div className="fixed top-14 z-30 flex h-12 items-center md:hidden">
         <MobileNav tree={tree} />
       </div>
-      <main className="relative py-6 pt-18 md:pt-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
-        <div className="mx-auto w-full min-w-0">{children}</div>
+      <main className="relative py-6 pt-18 md:pt-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_260px]">
+        {children}
       </main>
     </div>
   );

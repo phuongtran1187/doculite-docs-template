@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/collapsible";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { type NavEntry, isNavGroup } from "@/lib/navigation";
+import { type NavEntry, isNavGroup } from "@/lib/navigation-types";
 
 export function SidebarNavItem({ entry }: { entry: NavEntry }) {
   const pathname = usePathname();

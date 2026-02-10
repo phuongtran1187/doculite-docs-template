@@ -1,26 +1,11 @@
 import { docs } from "#site/content";
 import fs from "fs";
 import path from "path";
+import type { NavItem, NavGroup, NavTree } from "@/lib/navigation-types";
 
-export interface NavItem {
-  title: string;
-  href: string;
-  order: number;
-}
-
-export interface NavGroup {
-  title: string;
-  order: number;
-  items: NavEntry[];
-}
-
-export type NavEntry = NavItem | NavGroup;
-export type NavTree = NavEntry[];
-
-// Type guard to distinguish groups from items
-export function isNavGroup(entry: NavEntry): entry is NavGroup {
-  return "items" in entry;
-}
+// Re-export types for convenience in server components
+export type { NavItem, NavGroup, NavEntry, NavTree } from "@/lib/navigation-types";
+export { isNavGroup } from "@/lib/navigation-types";
 
 interface MetaEntry {
   title: string;
@@ -45,13 +30,11 @@ function formatTitle(slug: string): string {
 
 /**
  * Build navigation tree from Velite docs collection + _meta.json files.
- * Groups docs by directory, applies ordering from _meta.json, falls back
- * to frontmatter order then alphabetical.
+ * Server-only: uses fs to read _meta.json files.
  */
 export function buildNavTree(): NavTree {
   const published = docs.filter((doc) => doc.published);
 
-  // Separate root-level docs from nested docs
   const rootDocs: NavItem[] = [];
   const grouped = new Map<string, NavItem[]>();
 
@@ -60,32 +43,16 @@ export function buildNavTree(): NavTree {
     const segments = params.split("/").filter(Boolean);
 
     if (segments.length === 0) {
-      // Root index doc (content/docs/index.mdx)
-      rootDocs.push({
-        title: doc.title,
-        href: "/docs",
-        order: doc.order,
-      });
+      rootDocs.push({ title: doc.title, href: "/docs", order: doc.order });
     } else if (segments.length === 1) {
-      // Root-level doc (content/docs/foo.mdx)
-      rootDocs.push({
-        title: doc.title,
-        href: `/docs/${params}`,
-        order: doc.order,
-      });
+      rootDocs.push({ title: doc.title, href: `/docs/${params}`, order: doc.order });
     } else {
-      // Nested doc (content/docs/getting-started/installation.mdx)
       const dir = segments[0];
       if (!grouped.has(dir)) grouped.set(dir, []);
-      grouped.get(dir)!.push({
-        title: doc.title,
-        href: `/docs/${params}`,
-        order: doc.order,
-      });
+      grouped.get(dir)!.push({ title: doc.title, href: `/docs/${params}`, order: doc.order });
     }
   }
 
-  // Build groups with _meta.json ordering
   const docsMeta = loadMeta("docs");
   const groups: NavGroup[] = [];
 
@@ -93,7 +60,6 @@ export function buildNavTree(): NavTree {
     const meta = docsMeta[dir];
     const dirMeta = loadMeta(`docs/${dir}`);
 
-    // Apply _meta.json titles to items
     const sortedItems = items
       .map((item) => {
         const slug = item.href.split("/").pop()!;
@@ -113,7 +79,6 @@ export function buildNavTree(): NavTree {
     });
   }
 
-  // Sort everything by order
   const sortedRoot = rootDocs.sort((a, b) => a.order - b.order);
   const sortedGroups = groups.sort((a, b) => a.order - b.order);
 
