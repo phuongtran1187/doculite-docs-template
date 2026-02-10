@@ -6,16 +6,16 @@ export const siteConfig: DoculiteConfig = {
   url: "https://doculite.dev",
   navLinks: [
     { title: "Docs", href: "/docs" },
-    { title: "GitHub", href: "https://github.com/your-org/doculite", external: true },
+    { title: "GitHub", href: "https://github.com/phuongtran1187/doculite-docs-template", external: true },
   ],
   socialLinks: [
-    { platform: "github", url: "https://github.com/your-org/doculite" },
+    { platform: "github", url: "https://github.com/phuongtran1187/doculite-docs-template" },
   ],
   footer: {
     text: "Built with Doculite.",
   },
   github: {
-    repo: "your-org/doculite",
-    editUrl: "https://github.com/your-org/doculite/edit/main/content",
+    repo: "phuongtran1187/doculite-docs-template",
+    editUrl: "https://github.com/phuongtran1187/doculite-docs-template/edit/main/content",
   },
 };
