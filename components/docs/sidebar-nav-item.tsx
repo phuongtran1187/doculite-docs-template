@@ -15,13 +15,8 @@ export function SidebarNavItem({ entry }: { entry: NavEntry }) {
   const pathname = usePathname();
 
   if (isNavGroup(entry)) {
-    // Auto-expand if the group contains the active page
-    const isActive = entry.items.some(
-      (item) => !isNavGroup(item) && item.href === pathname
-    );
-
     return (
-      <Collapsible defaultOpen={isActive} className="group/collapsible">
+      <Collapsible defaultOpen className="group/collapsible">
         <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm font-semibold hover:bg-accent">
           {entry.title}
           <ChevronRight className="h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />

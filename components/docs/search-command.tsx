@@ -53,9 +53,20 @@ export function SearchCommand({ entries }: SearchCommandProps) {
 
   return (
     <>
+      {/* Icon-only on mobile */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="md:hidden"
+        onClick={() => setOpen(true)}
+      >
+        <Search className="size-5" />
+        <span className="sr-only">Search</span>
+      </Button>
+      {/* Full button on desktop */}
       <Button
         variant="outline"
-        className="relative h-9 w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64"
+        className="relative hidden h-9 justify-start text-sm text-muted-foreground sm:pr-12 md:flex md:w-40 lg:w-64"
         onClick={() => setOpen(true)}
       >
         <Search className="mr-2 size-4" />

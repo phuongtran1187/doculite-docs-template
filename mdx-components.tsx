@@ -12,7 +12,7 @@ import { FileTree, Folder, File } from "@/components/mdx/file-tree";
 export const mdxComponents: MDXComponents = {
   h1: ({ children, ...props }) => (
     <h1
-      className="scroll-m-20 text-4xl font-bold tracking-tight"
+      className="scroll-m-20 text-2xl font-bold tracking-tight md:text-4xl"
       {...props}
     >
       {children}
@@ -20,7 +20,7 @@ export const mdxComponents: MDXComponents = {
   ),
   h2: ({ children, ...props }) => (
     <h2
-      className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight mt-10 first:mt-0"
+      className="scroll-m-20 border-b pb-2 text-xl font-semibold tracking-tight mt-10 first:mt-0 md:text-3xl"
       {...props}
     >
       {children}
@@ -28,7 +28,7 @@ export const mdxComponents: MDXComponents = {
   ),
   h3: ({ children, ...props }) => (
     <h3
-      className="scroll-m-20 text-2xl font-semibold tracking-tight mt-8"
+      className="scroll-m-20 text-lg font-semibold tracking-tight mt-8 md:text-2xl"
       {...props}
     >
       {children}
@@ -36,7 +36,7 @@ export const mdxComponents: MDXComponents = {
   ),
   h4: ({ children, ...props }) => (
     <h4
-      className="scroll-m-20 text-xl font-semibold tracking-tight mt-6"
+      className="scroll-m-20 text-base font-semibold tracking-tight mt-6 md:text-xl"
       {...props}
     >
       {children}

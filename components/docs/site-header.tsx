@@ -2,20 +2,24 @@ import Link from "next/link";
 
 import { ThemeToggle } from "@/components/docs/theme-toggle";
 import { SearchCommand } from "@/components/docs/search-command";
+import { MobileNav } from "@/components/docs/mobile-nav";
 import { siteConfig } from "@/lib/site-config";
 import { getSearchIndex } from "@/lib/search";
+import { buildNavTree } from "@/lib/navigation";
 
 export function SiteHeader() {
   const entries = getSearchIndex();
+  const tree = buildNavTree();
   const githubLink = siteConfig.socialLinks?.find((link) => link.platform === "github");
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="container mx-auto flex h-14 items-center px-4 md:px-8">
-        <Link href="/" className="mr-6 font-bold">
+      <div className="container mx-auto flex h-14 items-center gap-4 px-4 md:px-8">
+        <MobileNav tree={tree} />
+        <Link href="/" className="font-bold">
           {siteConfig.name}
         </Link>
-        <nav aria-label="Main navigation" className="flex items-center gap-6 text-sm">
+        <nav aria-label="Main navigation" className="hidden items-center gap-6 text-sm md:flex">
           {siteConfig.navLinks.map((link) =>
             link.external ? (
               <a

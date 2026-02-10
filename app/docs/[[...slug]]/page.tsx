@@ -46,7 +46,7 @@ export default async function DocPage({ params }: DocPageProps) {
       <div className="mx-auto w-full min-w-0">
         <DocBreadcrumbs slug={slugPath} />
         <div className="space-y-2">
-          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+          <h1 className="scroll-m-20 text-2xl font-bold tracking-tight md:text-4xl">
             {doc.title}
           </h1>
           {doc.description && (
