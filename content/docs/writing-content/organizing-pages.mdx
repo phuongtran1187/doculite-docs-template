@@ -51,6 +51,52 @@ Controls the order and titles of pages within a group:
   If no `_meta.json` exists, pages are sorted by their frontmatter `order` field, and directory names are converted from kebab-case to Title Case.
 </Callout>
 
+## Nested Navigation
+
+Directories can be nested to any depth. Sub-directories become collapsible groups in the sidebar.
+
+```
+content/docs/
+├── _meta.json
+└── getting-started/
+    ├── _meta.json
+    ├── installation.mdx
+    └── setup/                    ← nested sub-group
+        ├── _meta.json
+        ├── environment.mdx
+        └── editor-config.mdx
+```
+
+Each level needs its own `_meta.json`. The **parent** directory's `_meta.json` defines the title and order for sub-directories, just like it does for pages:
+
+```json title="content/docs/getting-started/_meta.json"
+{
+  "installation": { "title": "Installation", "order": 1 },
+  "setup": { "title": "Setup Guides", "order": 2 }
+}
+```
+
+```json title="content/docs/getting-started/setup/_meta.json"
+{
+  "environment": { "title": "Environment Setup", "order": 1 },
+  "editor-config": { "title": "Editor Configuration", "order": 2 }
+}
+```
+
+This renders as:
+
+```
+▼ Getting Started
+    Installation
+  ▼ Setup Guides
+      Environment Setup
+      Editor Configuration
+```
+
+<Callout type="tip">
+  There is no depth limit — you can nest as many levels as needed. Each level just needs a `_meta.json` for ordering and titles.
+</Callout>
+
 ## Adding a New Section
 
 <Steps>
