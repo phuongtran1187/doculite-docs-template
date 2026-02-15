@@ -1,7 +1,7 @@
 import { docs } from "#site/content";
 import fs from "fs";
 import path from "path";
-import type { NavItem, NavGroup, NavTree } from "@/lib/navigation-types";
+import type { NavItem, NavGroup, NavTree, NavEntry } from "@/lib/navigation-types";
 import { DEFAULT_LOCALE } from "@/lib/i18n-config";
 
 // Re-export types for convenience in server components
@@ -44,9 +44,54 @@ function formatTitle(slug: string): string {
     .join(" ");
 }
 
+// Intermediate tree node for recursive tree building
+interface TreeNode {
+  docs: NavItem[];                    // leaf docs at this directory level
+  children: Map<string, TreeNode>;    // sub-directories
+}
+
+function createTreeNode(): TreeNode {
+  return { docs: [], children: new Map() };
+}
+
+/**
+ * Recursively convert a TreeNode into sorted NavEntry[].
+ * Loads _meta.json at each level for titles/orders of both docs and sub-groups.
+ */
+function convertTreeNode(node: TreeNode, metaDir: string, locale: string): NavEntry[] {
+  const meta = loadMeta(metaDir, locale);
+  const entries: NavEntry[] = [];
+
+  // Leaf docs — apply meta overrides for title/order
+  for (const item of node.docs) {
+    const slug = item.href.split("/").pop()!;
+    const itemMeta = meta[slug];
+    entries.push({
+      ...item,
+      title: itemMeta?.title ?? item.title,
+      order: itemMeta?.order ?? item.order,
+    });
+  }
+
+  // Sub-directories → NavGroup (recursive)
+  for (const [dir, childNode] of node.children) {
+    const dirMeta = meta[dir];
+    const childEntries = convertTreeNode(childNode, `${metaDir}/${dir}`, locale);
+    entries.push({
+      title: dirMeta?.title ?? formatTitle(dir),
+      order: dirMeta?.order ?? 999,
+      items: childEntries,
+    } satisfies NavGroup);
+  }
+
+  return entries.sort((a, b) => a.order - b.order);
+}
+
 /**
  * Build navigation tree from Velite docs collection + _meta.json files.
  * Server-only: uses fs to read _meta.json files.
+ *
+ * Supports arbitrary nesting depth — sub-directories become collapsible NavGroups.
  *
  * For non-default locales, includes EN docs as fallback for untranslated pages
  * so the sidebar shows ALL pages (untranslated ones link to EN fallback + banner).
@@ -69,52 +114,35 @@ export function buildNavTree(locale: string = DEFAULT_LOCALE): NavTree {
     mergedDocs = [...localeDocs, ...fallbackDocs];
   }
 
-  const rootDocs: NavItem[] = [];
-  const grouped = new Map<string, NavItem[]>();
+  // Build intermediate tree by walking slug segments
+  const root = createTreeNode();
 
   for (const doc of mergedDocs) {
-    const params = doc.slugAsParams;
-    const segments = params.split("/").filter(Boolean);
+    const segments = doc.slugAsParams.split("/").filter(Boolean);
 
-    if (segments.length === 0) {
-      rootDocs.push({ title: doc.title, href: "/docs", order: doc.order });
-    } else if (segments.length === 1) {
-      rootDocs.push({ title: doc.title, href: `/docs/${params}`, order: doc.order });
+    if (segments.length <= 1) {
+      // Root-level doc (e.g., /docs or /docs/getting-started)
+      root.docs.push({
+        title: doc.title,
+        href: segments.length === 0 ? "/docs" : `/docs/${doc.slugAsParams}`,
+        order: doc.order,
+      });
     } else {
-      const dir = segments[0];
-      if (!grouped.has(dir)) grouped.set(dir, []);
-      grouped.get(dir)!.push({ title: doc.title, href: `/docs/${params}`, order: doc.order });
+      // Nested doc — walk to the parent directory node
+      let node = root;
+      for (let i = 0; i < segments.length - 1; i++) {
+        if (!node.children.has(segments[i])) {
+          node.children.set(segments[i], createTreeNode());
+        }
+        node = node.children.get(segments[i])!;
+      }
+      node.docs.push({
+        title: doc.title,
+        href: `/docs/${doc.slugAsParams}`,
+        order: doc.order,
+      });
     }
   }
 
-  const docsMeta = loadMeta("docs", locale);
-  const groups: NavGroup[] = [];
-
-  for (const [dir, items] of grouped) {
-    const meta = docsMeta[dir];
-    const dirMeta = loadMeta(`docs/${dir}`, locale);
-
-    const sortedItems = items
-      .map((item) => {
-        const slug = item.href.split("/").pop()!;
-        const itemMeta = dirMeta[slug];
-        return {
-          ...item,
-          title: itemMeta?.title ?? item.title,
-          order: itemMeta?.order ?? item.order,
-        };
-      })
-      .sort((a, b) => a.order - b.order);
-
-    groups.push({
-      title: meta?.title ?? formatTitle(dir),
-      order: meta?.order ?? 999,
-      items: sortedItems,
-    });
-  }
-
-  const sortedRoot = rootDocs.sort((a, b) => a.order - b.order);
-  const sortedGroups = groups.sort((a, b) => a.order - b.order);
-
-  return [...sortedRoot, ...sortedGroups];
+  return convertTreeNode(root, "docs", locale);
 }

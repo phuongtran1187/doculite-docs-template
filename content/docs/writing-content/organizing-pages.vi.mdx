@@ -51,6 +51,52 @@ Mỗi thư mục dùng file `_meta.json` để điều khiển tiêu đề sideb
   Nếu không có `_meta.json`, trang được sắp xếp theo trường `order` trong frontmatter, và tên thư mục được chuyển từ kebab-case sang Title Case.
 </Callout>
 
+## Navigation lồng nhau
+
+Thư mục có thể lồng nhau không giới hạn độ sâu. Thư mục con sẽ hiển thị dạng nhóm có thể thu gọn trong sidebar.
+
+```
+content/docs/
+├── _meta.json
+└── getting-started/
+    ├── _meta.json
+    ├── installation.mdx
+    └── setup/                    ← nhóm con lồng nhau
+        ├── _meta.json
+        ├── environment.mdx
+        └── editor-config.mdx
+```
+
+Mỗi cấp cần file `_meta.json` riêng. File `_meta.json` của thư mục **cha** định nghĩa tiêu đề và thứ tự cho thư mục con, giống như với trang:
+
+```json title="content/docs/getting-started/_meta.json"
+{
+  "installation": { "title": "Installation", "order": 1 },
+  "setup": { "title": "Setup Guides", "order": 2 }
+}
+```
+
+```json title="content/docs/getting-started/setup/_meta.json"
+{
+  "environment": { "title": "Environment Setup", "order": 1 },
+  "editor-config": { "title": "Editor Configuration", "order": 2 }
+}
+```
+
+Kết quả hiển thị:
+
+```
+▼ Getting Started
+    Installation
+  ▼ Setup Guides
+      Environment Setup
+      Editor Configuration
+```
+
+<Callout type="tip">
+  Không giới hạn độ sâu — bạn có thể lồng bao nhiêu cấp tùy ý. Mỗi cấp chỉ cần một file `_meta.json` để sắp xếp và đặt tiêu đề.
+</Callout>
+
 ## Thêm Section mới
 
 <Steps>
